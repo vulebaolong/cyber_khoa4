@@ -1,2 +1,3 @@
 import { combineReducers } from "redux";
-export const rootReducer = combineReducers({});
+import { jiraReducer } from "./jiraReducer";
+export const rootReducer = combineReducers({ jiraReducer });
