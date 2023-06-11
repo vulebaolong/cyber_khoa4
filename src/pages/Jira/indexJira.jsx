@@ -1,4 +1,10 @@
+import Main from "./../../components/Jira/Main/Main";
+
 function indexJira() {
-    return <div>indexJira</div>;
+    return (
+        <div>
+            <Main />
+        </div>
+    );
 }
 export default indexJira;

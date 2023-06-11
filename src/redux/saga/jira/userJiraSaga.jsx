@@ -1,18 +1,13 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import {
-    HIDE_LOADING,
-    SAVE_USER_LOGIN,
-    SHOW_LOADING,
-    USER_SIGNIN_API_SAGA,
-} from "../../contants/jiraContant";
+import { call, delay, put, takeLatest } from "redux-saga/effects";
+import { SAVE_USER_LOGIN, USER_SIGNIN_API_SAGA } from "../../contants/jiraContant";
 import { TOKEN, USER_LOGIN, jiraApi } from "../../../services/jiraServices";
 import { history } from "../../../util/lib/history";
+import { loading } from "../../../util/showHideLoading";
 
 function* signinSaga({ type, payload }) {
     const { values } = payload;
-    yield put({
-        type: SHOW_LOADING,
-    });
+    loading.show();
+    yield delay(1000);
     try {
         const { data, status } = yield call(() => jiraApi.signinJira(values));
         console.log({ data, status });
@@ -26,14 +21,11 @@ function* signinSaga({ type, payload }) {
         });
 
         // const { history } = yield select((state) => state.historyReducer);
-        // console.log(history);
         history.push("/jira");
     } catch (error) {
         console.log(error.response.data);
     }
-    yield put({
-        type: HIDE_LOADING,
-    });
+    loading.hide();
 }
 
 export function* theodoiSignin() {

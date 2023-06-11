@@ -1,3 +1,8 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .loading {
     display: flex;
     justify-content: center;
@@ -6,4 +11,12 @@
     height: 100vh;
     position: fixed;
     background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+.loading.show {
+    display: flex;
+}
+.loading.hide {
+    display: none;
 }

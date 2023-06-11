@@ -1,0 +1,74 @@
+.sidebar {
+    z-index: 100;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+    height: 100vh;
+    width: 64px;
+    background: rgb(7, 71, 166);
+    transition: all 0.1s ease 0s;
+    transform: translateZ(0px);
+}
+
+.sidebar:hover {
+    width: 200px;
+    box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 50px 0px;
+}
+
+.logo {
+    display: block;
+    position: relative;
+    left: 0px;
+    margin: 20px 0px 10px;
+    transition: left 0.1s ease 0s;
+}
+
+.logo span {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* SEARCH */
+.item {
+    position: relative;
+    width: 100%;
+    height: 42px;
+    line-height: 42px;
+    padding-left: 64px;
+    color: rgb(222, 235, 255);
+    transition: color 0.1s ease 0s;
+    cursor: pointer;
+    user-select: none;
+}
+
+.item .item_icon {
+    position: absolute;
+    left: 22px;
+    font-size: 22px;
+}
+
+.item .item_text {
+    position: relative;
+    right: 12px;
+    visibility: hidden;
+    opacity: 0;
+    text-transform: uppercase;
+    transition: all 0.1s ease 0s;
+}
+
+.sidebar:hover .item .item_text {
+    right: 0px;
+    visibility: visible;
+    opacity: 1;
+}
+
+.about {
+    position: absolute;
+    bottom: 20px;
+    left: 0px;
+    width: 100%;
+}

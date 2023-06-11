@@ -1,27 +1,21 @@
+import "./App.css";
 import React from "react";
 import { Switch } from "react-router-dom";
-import "./App.css";
-import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
-import NotFound from "./pages/NotFound/NotFound";
 import { UserLoginTemplate } from "./templates/UserLoginTemplate";
-import Loading from "./components/Other/Loading";
-import { useSelector } from "react-redux";
 import { HomeTemplate } from "./templates/HomeTemplate";
 import { JiraTemplate } from "./templates/JiraTemplate";
+import Loading from "./components/Other/Loading";
 import indexJira from "./pages/Jira/indexJira";
+import LoginJira from "./pages/Jira/LoginJira";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
-    const { loadingReducer } = useSelector((state) => state);
-    const isLoading = loadingReducer.isLoading;
-
     return (
         <>
+            <Loading />
             <Switch>
-                {isLoading && <Loading />}
-                <UserLoginTemplate exact path="/" Component={Login} />
-                <UserLoginTemplate exact path="/login" Component={Login} />
-                <HomeTemplate exact path="/home" Component={Home} />
+                <UserLoginTemplate exact path="/" Component={LoginJira} />
+                <UserLoginTemplate exact path="/login" Component={LoginJira} />
                 <JiraTemplate exact path="/jira" Component={indexJira} />
                 <HomeTemplate path="*" Component={NotFound} />
                 {/* <Route exact path="/contact" component={Contact} />
