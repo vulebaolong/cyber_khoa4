@@ -2,9 +2,6 @@ import { NavLink } from "react-router-dom";
 import "./Header.css";
 
 function Header() {
-    const styleNav = {
-        fontSize: "50px",
-    };
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -71,7 +68,9 @@ function Header() {
                         </li>
 
                         <li className="nav-item">
-                            <a className="nav-link disabled">Disabled</a>
+                            <a href="/" className="nav-link disabled">
+                                Disabled
+                            </a>
                         </li>
                     </ul>
                     <form className="d-flex" role="search">

@@ -1,12 +1,18 @@
-import { withFormik } from "formik";
+import { Field, withFormik } from "formik";
 import * as Yup from "yup";
 import { connect } from "react-redux";
-import { USER_SIGNIN_API_SAGA } from "./../../redux/contants/jiraContant";
 import { userSigninAction } from "../../redux/actions/jiraAction";
 
 function Login(props) {
     // console.log(props);
-    const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
+    const { touched, errors, handleChange, handleSubmit, setFieldValue } = props;
+    const handleTry = () => {
+        // inputEmail.current.value = "longlong@gmail.com";
+        // inputPassword.current.value = "123456";
+        setFieldValue("email", "longlong@gmail.com");
+        setFieldValue("password", "123456");
+    };
+
     return (
         <div
             className="d-flex justify-content-center align-items-center"
@@ -20,7 +26,7 @@ function Login(props) {
                     <h3 className="text-center">Login Jira</h3>
                     <div className="mb-3">
                         <label className="form-label">Email address</label>
-                        <input
+                        <Field
                             onChange={handleChange}
                             name="email"
                             type="text"
@@ -32,7 +38,7 @@ function Login(props) {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input
+                        <Field
                             onChange={handleChange}
                             type="password"
                             name="password"
@@ -43,8 +49,22 @@ function Login(props) {
                         )}
                     </div>
 
-                    <button type="submit" className="btn btn-primary">
+                    <button
+                        style={{ width: "100%" }}
+                        type="submit"
+                        className="btn btn-primary mb-2"
+                    >
                         Login
+                    </button>
+                    <button
+                        style={{ width: "100%" }}
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                            handleTry();
+                        }}
+                    >
+                        Try
                     </button>
                 </form>
             </div>
@@ -64,9 +84,13 @@ const MyEnhancedForm = {
             .max(32, "password phải chỉ tối đa 32 ký tự"),
     }),
     handleSubmit: (values, { props, setSubmitting }) => {
-        const { dispatch } = props;
-        console.log(values);
-        dispatch(userSigninAction(values));
+        const { dispatch, history } = props;
+        console.log(props);
+        const data = {
+            values,
+            history,
+        };
+        dispatch(userSigninAction(data));
     },
 
     displayName: "Login Jira",

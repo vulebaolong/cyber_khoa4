@@ -1,3 +1,9 @@
 import { combineReducers } from "redux";
 import { jiraReducer } from "./jiraReducer";
-export const rootReducer = combineReducers({ jiraReducer });
+import { loadingReducer } from "./loadingReducer";
+import { userReducer } from "./userReducer";
+export const rootReducer = combineReducers({
+    jiraReducer,
+    loadingReducer,
+    userReducer,
+});

@@ -1,8 +1,8 @@
 import { USER_SIGNIN_API_SAGA } from "../contants/jiraContant";
 
-export const userSigninAction = (values) => {
+export const userSigninAction = (data) => {
     return {
         type: USER_SIGNIN_API_SAGA,
-        payload: values,
+        payload: data,
     };
 };

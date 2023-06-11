@@ -1,8 +1,4 @@
-import { Button } from "antd";
 import { Route } from "react-router-dom";
-import { Layout, Space } from "antd";
-
-const { Header, Footer, Sider, Content } = Layout;
 
 export const UserLoginTemplate = (props) => {
     let { Component, ...restRoute } = props;
