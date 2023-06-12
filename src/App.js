@@ -5,9 +5,10 @@ import { UserLoginTemplate } from "./templates/UserLoginTemplate";
 import { HomeTemplate } from "./templates/HomeTemplate";
 import { JiraTemplate } from "./templates/JiraTemplate";
 import Loading from "./components/Other/Loading";
-import indexJira from "./pages/Jira/indexJira";
 import LoginJira from "./pages/Jira/LoginJira";
 import NotFound from "./pages/NotFound/NotFound";
+import ProjectSetting from "./pages/Jira/ProjectSetting";
+import BoardJira from "./pages/Jira/BoardJira";
 
 function App() {
     return (
@@ -16,7 +17,8 @@ function App() {
             <Switch>
                 <UserLoginTemplate exact path="/" Component={LoginJira} />
                 <UserLoginTemplate exact path="/login" Component={LoginJira} />
-                <JiraTemplate exact path="/jira" Component={indexJira} />
+                <JiraTemplate exact path="/board" Component={BoardJira} />
+                <JiraTemplate exact path="/createproject" Component={ProjectSetting} />
                 <HomeTemplate path="*" Component={NotFound} />
                 {/* <Route exact path="/contact" component={Contact} />
                 <Route exact path="/about" component={About} />

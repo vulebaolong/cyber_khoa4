@@ -13,4 +13,10 @@ export const jiraApi = {
             data: userLogin,
         });
     },
+    getAllProjectCategory: () => {
+        return axios({
+            url: `${DOMAIN}/ProjectCategory`,
+            method: "GET",
+        });
+    },
 };

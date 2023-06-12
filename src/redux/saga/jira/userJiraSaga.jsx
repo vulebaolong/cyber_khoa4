@@ -3,6 +3,7 @@ import { SAVE_USER_LOGIN, USER_SIGNIN_API_SAGA } from "../../contants/jiraContan
 import { TOKEN, USER_LOGIN, jiraApi } from "../../../services/jiraServices";
 import { history } from "../../../util/lib/history";
 import { loading } from "../../../util/showHideLoading";
+import { STATE_CODE } from "../../../util/constant/statusCode";
 
 function* signinSaga({ type, payload }) {
     const { values } = payload;
@@ -10,7 +11,9 @@ function* signinSaga({ type, payload }) {
     yield delay(1000);
     try {
         const { data, status } = yield call(() => jiraApi.signinJira(values));
-        console.log({ data, status });
+        // console.log({ data, status });
+
+        if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 
         // lưu vào localstore
         localStorage.setItem(TOKEN, data.content.accessToken);
@@ -21,7 +24,7 @@ function* signinSaga({ type, payload }) {
         });
 
         // const { history } = yield select((state) => state.historyReducer);
-        history.push("/jira");
+        history.push("/board");
     } catch (error) {
         console.log(error.response.data);
     }

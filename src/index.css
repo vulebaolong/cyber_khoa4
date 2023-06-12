@@ -12,6 +12,11 @@ a {
     position: fixed;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
+    z-index: 9999999;
+}
+
+.loading * {
+    z-index: 9999999;
 }
 
 .loading.show {
@@ -19,4 +24,20 @@ a {
 }
 .loading.hide {
     display: none;
+}
+
+.main {
+    padding: 25px 32px 50px 334px;
+}
+
+.avatar_button.active {
+    outline: 3px solid blue !important;
+    padding: 0.1rem;
+}
+
+.avatar_button {
+    border-radius: 50%;
+    border: none;
+    padding: 0.1rem;
+    background-color: white;
 }

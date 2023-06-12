@@ -1,0 +1,21 @@
+.info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.info .input_search {
+    width: unset;
+}
+
+.avatar button {
+    transition: transform 0.1s ease 0s;
+}
+
+.avatar button:not(:first-child) {
+    margin-left: -10px;
+}
+
+.avatar button:hover {
+    transform: translateY(-5px);
+}

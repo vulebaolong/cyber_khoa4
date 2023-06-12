@@ -121,18 +121,30 @@ function Menu() {
                 </div>
             </div>
             <div className={`${style.body}`}>
-                <NavLink className={`${style.item} ${style.active}`} to="/project/board">
-                    <div className={`${style.icon}`}>
-                        <i className="fa-solid fa-clapperboard"></i>
-                    </div>
-                    <div>Kanban Board</div>
-                </NavLink>
-                <NavLink className={`${style.item}`} to="/project/settings">
-                    <div className={`${style.icon}`}>
-                        <i className="fa-solid fa-gear"></i>
-                    </div>
-                    <div>Project settings</div>
-                </NavLink>
+                <div className="btn-group-vertical" role="group">
+                    <NavLink
+                        className={`${style.item} btn btn-secondary-danger rounded-2 mb-2`}
+                        to="/board"
+                    >
+                        <div
+                            className={`${style.icon} `}
+                            autoComplete="off"
+                            defaultChecked
+                        >
+                            <i className="fa-solid fa-clapperboard"></i>
+                        </div>
+                        <div>Kanban Board</div>
+                    </NavLink>
+                    <NavLink
+                        className={`${style.item} btn btn-secondary-danger rounded`}
+                        to="/createproject"
+                    >
+                        <div className={`${style.icon} `} autoComplete="off">
+                            <i className="fa-solid fa-gear"></i>
+                        </div>
+                        <div>Project settings</div>
+                    </NavLink>
+                </div>
                 {/* -------------------------- */}
                 <hr />
                 <div className={`${style.item} ${style.item_bottom}`}>
