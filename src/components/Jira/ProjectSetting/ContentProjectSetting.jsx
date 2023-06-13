@@ -1,27 +1,34 @@
 import { useEffect, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { useDispatch, useSelector } from "react-redux";
-import { projectCategoryAction } from "../../../redux/actions/jiraAction";
+import { connect, useDispatch, useSelector } from "react-redux";
+import {
+    createProjectAction,
+    projectCategoryAction,
+} from "../../../redux/actions/jiraAction";
+import { withFormik } from "formik";
+import * as Yup from "yup";
 
-function ContentProjectSetting() {
+function ContentProjectSetting(props) {
     const editorRef = useRef(null);
     const projectCategory = useSelector(
         (state) => state.projectCategoryReducer.projectCategory
     );
+    const { touched, errors, handleChange, handleSubmit, setFieldValue } = props;
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(projectCategoryAction());
     }, []);
 
-    const log = () => {
+    const handleEditorChange = () => {
         if (editorRef.current) {
             console.log(editorRef.current.getContent());
+            setFieldValue("description", editorRef.current.getContent());
         }
     };
-
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="projectName" className="form-label">
                     Name
@@ -31,14 +38,16 @@ function ContentProjectSetting() {
                     className="form-control"
                     name="projectName"
                     id="projectName"
+                    onChange={handleChange}
                 />
             </div>
 
             <div className="mb-3">
-                <label htmlFor="Description" className="form-label">
+                <label htmlFor="description" className="form-label">
                     Description
                 </label>
                 <Editor
+                    name="description"
                     apiKey="hngjtnxm2rdvc4vl3dlgk44ds8y6fpb9ijo0fsxku53q8f0b"
                     onInit={(evt, editor) => (editorRef.current = editor)}
                     initialValue=""
@@ -76,7 +85,7 @@ function ContentProjectSetting() {
                         content_css: "dark",
                     }}
                     onEditorChange={() => {
-                        log();
+                        handleEditorChange();
                     }}
                 />
             </div>
@@ -86,7 +95,7 @@ function ContentProjectSetting() {
                     Project Category
                 </label>
 
-                <select className="form-select" name="categoryId">
+                <select onChange={handleChange} className="form-select" name="categoryId">
                     {projectCategory.map((item) => {
                         return (
                             <option key={item.id} value={item.id}>
@@ -103,4 +112,28 @@ function ContentProjectSetting() {
         </form>
     );
 }
-export default ContentProjectSetting;
+const MyEnhancedForm = {
+    enableReinitialize: true,
+    mapPropsToValues: (props) => {
+        const { projectCategory } = props;
+        return {
+            projectName: "",
+            description: "",
+            categoryId: projectCategory[0]?.id,
+        };
+    },
+    validationSchema: Yup.object().shape({}),
+    handleSubmit: (values, { props, setSubmitting }) => {
+        console.log(values);
+        const { dispatch } = props;
+        dispatch(createProjectAction(values));
+    },
+    displayName: "ContentProjectSetting",
+};
+const mapStateToProps = (state) => ({
+    projectCategory: state.projectCategoryReducer.projectCategory,
+});
+
+export default connect(mapStateToProps)(
+    withFormik(MyEnhancedForm)(ContentProjectSetting)
+);

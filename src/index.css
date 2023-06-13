@@ -26,10 +26,6 @@ a {
     display: none;
 }
 
-.main {
-    padding: 25px 32px 50px 334px;
-}
-
 .avatar_button.active {
     outline: 3px solid blue !important;
     padding: 0.1rem;

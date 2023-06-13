@@ -9,7 +9,7 @@ function Login(props) {
     const handleTry = () => {
         // inputEmail.current.value = "longlong@gmail.com";
         // inputPassword.current.value = "123456";
-        setFieldValue("email", "longlong@gmail.com");
+        setFieldValue("email", "vulebaolong@gmail.com");
         setFieldValue("password", "123456");
     };
 

@@ -9,16 +9,22 @@ import LoginJira from "./pages/Jira/LoginJira";
 import NotFound from "./pages/NotFound/NotFound";
 import ProjectSetting from "./pages/Jira/ProjectSetting";
 import BoardJira from "./pages/Jira/BoardJira";
+import ProjectManager from "./pages/Jira/ProjectManager";
+import DrawerRight from "./HOC/DrawerRight";
+import Fun from "./components/Jira/Fun/Fun";
 
 function App() {
     return (
         <>
+            <Fun />
+            <DrawerRight />
             <Loading />
             <Switch>
                 <UserLoginTemplate exact path="/" Component={LoginJira} />
                 <UserLoginTemplate exact path="/login" Component={LoginJira} />
                 <JiraTemplate exact path="/board" Component={BoardJira} />
                 <JiraTemplate exact path="/createproject" Component={ProjectSetting} />
+                <JiraTemplate exact path="/projectmanager" Component={ProjectManager} />
                 <HomeTemplate path="*" Component={NotFound} />
                 {/* <Route exact path="/contact" component={Contact} />
                 <Route exact path="/about" component={About} />

@@ -136,13 +136,22 @@ function Menu() {
                         <div>Kanban Board</div>
                     </NavLink>
                     <NavLink
-                        className={`${style.item} btn btn-secondary-danger rounded`}
+                        className={`${style.item} btn btn-secondary-danger rounded mb-2`}
                         to="/createproject"
                     >
                         <div className={`${style.icon} `} autoComplete="off">
                             <i className="fa-solid fa-gear"></i>
                         </div>
                         <div>Project settings</div>
+                    </NavLink>
+                    <NavLink
+                        className={`${style.item} btn btn-secondary-danger rounded`}
+                        to="/projectmanager"
+                    >
+                        <div className={`${style.icon} `} autoComplete="off">
+                            <i className="fa-solid fa-gear"></i>
+                        </div>
+                        <div>Project manager</div>
                     </NavLink>
                 </div>
                 {/* -------------------------- */}

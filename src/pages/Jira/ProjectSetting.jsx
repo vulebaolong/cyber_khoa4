@@ -1,9 +1,10 @@
-import HeaderMain from "../../components/Jira/Main/HeaderMain";
+import Main from "../../components/Jira/Main/Main";
 import ContentProjectSetting from "../../components/Jira/ProjectSetting/ContentProjectSetting";
+import HeaderMain from "./../../components/Jira/Main/Header/HeaderMain";
 
 function ProjectSetting() {
     return (
-        <div className="main">
+        <Main>
             <div className="d-flex justify-content-center">
                 <div
                     className="projectsetting"
@@ -13,7 +14,7 @@ function ProjectSetting() {
                     <ContentProjectSetting />
                 </div>
             </div>
-        </div>
+        </Main>
     );
 }
 export default ProjectSetting;

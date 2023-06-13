@@ -19,4 +19,27 @@ export const jiraApi = {
             method: "GET",
         });
     },
+    createProject: (data) => {
+        return axios({
+            url: `${DOMAIN}/Project/createProjectAuthorize`,
+            method: "POST",
+            data,
+            headers: { Authorization: `Bearer ${localStorage.getItem(TOKEN)}` },
+        });
+    },
+    getAllProjects: () => {
+        return axios({
+            url: `${DOMAIN}/Project/getAllProject`,
+            method: "GET",
+            headers: { Authorization: `Bearer ${localStorage.getItem(TOKEN)}` },
+        });
+    },
+    updateProject: (data) => {
+        return axios({
+            url: `${DOMAIN}/Project/updateProject?projectId=${data.id}`,
+            method: "PUT",
+            data,
+            headers: { Authorization: `Bearer ${localStorage.getItem(TOKEN)}` },
+        });
+    },
 };
