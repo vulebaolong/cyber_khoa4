@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch } from "react-router-dom";
 import { UserLoginTemplate } from "./templates/UserLoginTemplate";
 import { HomeTemplate } from "./templates/HomeTemplate";
@@ -11,12 +11,22 @@ import ProjectSetting from "./pages/Jira/ProjectSetting";
 import BoardJira from "./pages/Jira/BoardJira";
 import ProjectManager from "./pages/Jira/ProjectManager";
 import DrawerRight from "./HOC/DrawerRight";
-import Fun from "./components/Jira/Fun/Fun";
+// import Fun from "./components/Jira/Fun/Fun";
+import { notification } from "antd";
+import { useDispatch } from "react-redux";
+import { initNotificationAction } from "./redux/actions/jiraAction";
 
 function App() {
+    const [api, contextHolder] = notification.useNotification();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(initNotificationAction(api));
+    }, [dispatch, api]);
+
     return (
         <>
-            <Fun />
+            {contextHolder}
+            {/* <Fun /> */}
             <DrawerRight />
             <Loading />
             <Switch>

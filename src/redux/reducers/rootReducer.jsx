@@ -5,6 +5,7 @@ import { projectCategoryReducer } from "./projectCategoryReducer";
 import { projectReducer } from "./projectReducer";
 import { drawerReducer } from "./drawerReducer";
 import { loadingReducer } from "./loadingReducer";
+import { notificationReducer } from "./notificationReducer";
 export const rootReducer = combineReducers({
     jiraReducer,
     userReducer,
@@ -12,4 +13,5 @@ export const rootReducer = combineReducers({
     projectReducer,
     drawerReducer,
     loadingReducer,
+    notificationReducer,
 });

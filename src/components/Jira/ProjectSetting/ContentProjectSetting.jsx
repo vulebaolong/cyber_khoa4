@@ -13,13 +13,13 @@ function ContentProjectSetting(props) {
     const projectCategory = useSelector(
         (state) => state.projectCategoryReducer.projectCategory
     );
-    const { touched, errors, handleChange, handleSubmit, setFieldValue } = props;
+    const { handleChange, handleSubmit, setFieldValue } = props;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(projectCategoryAction());
-    }, []);
+    }, [dispatch]);
 
     const handleEditorChange = () => {
         if (editorRef.current) {

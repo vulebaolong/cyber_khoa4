@@ -1,21 +1,37 @@
-import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag, theme } from "antd";
+import {
+    DeleteOutlined,
+    EditOutlined,
+    PlusOutlined,
+    SearchOutlined,
+} from "@ant-design/icons";
+import {
+    AutoComplete,
+    Avatar,
+    Button,
+    Input,
+    Popconfirm,
+    Popover,
+    Space,
+    Table,
+    Tag,
+    Tooltip,
+} from "antd";
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    addUserProjectAction,
+    deleteProjectAction,
     getAllProjectsAction,
+    getUserAction,
     initProjectEditAction,
 } from "../../../redux/actions/jiraAction";
-import {
-    showDrawerAction,
-    showEditDrawerAction,
-} from "../../../redux/actions/drawerAction";
+import { showEditDrawerAction } from "../../../redux/actions/drawerAction";
 import FormEditProject from "../Form/FormEditProject/FormEditProject";
 
 function ContentProjectManager() {
-    const projects = useSelector((state) => state.projectReducer.projects);
+    const { projects } = useSelector((state) => state.projectReducer);
+    const { users } = useSelector((state) => state.userReducer);
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
@@ -25,9 +41,10 @@ function ContentProjectManager() {
         dispatch(initProjectEditAction(record));
         dispatch(showEditDrawerAction(FormEditProject));
     };
+
     useEffect(() => {
         dispatch(getAllProjectsAction());
-    }, []);
+    }, [dispatch]);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -196,11 +213,93 @@ function ContentProjectManager() {
                 return <Tag color={color}>{categoryName}</Tag>;
             },
         },
+        // {
+        //     title: "description",
+        //     dataIndex: "description",
+        //     key: "description",
+        //     ...getColumnSearchProps("description"),
+        //     sorter: (a, b) => a.description.length - b.description.length,
+        //     sortDirections: ["descend", "ascend"],
+        //     render: (text, record, index) => {
+        //         // console.log("text: ", text);
+        //         // console.log("record: ", record);
+        //         // console.log("index: ", index);
+        //         const textJsx = parse(text);
+        //         return textJsx;
+        //     },
+        // },
         {
-            title: "description",
-            dataIndex: "description",
-            key: "description",
-            ...getColumnSearchProps("description"),
+            title: "Members",
+            key: "members",
+            render: (_, record) => {
+                const contentAvatar = record.members.map((item) => {
+                    return (
+                        <Tooltip key={item.userId} title={item.name} placement="top">
+                            <Avatar
+                                style={{
+                                    backgroundColor: `#${Math.floor(
+                                        Math.random() * 16777215
+                                    ).toString(16)}`,
+                                }}
+                            >
+                                {item.name[0]}
+                            </Avatar>
+                        </Tooltip>
+                    );
+                });
+                const autoComplete = (
+                    <AutoComplete
+                        style={{ width: "100%" }}
+                        onSearch={(value) => {
+                            dispatch(getUserAction(value));
+                        }}
+                        options={users.map((item) => {
+                            return { label: item.name, value: `${item.userId}` };
+                        })}
+                        onSelect={(value) => {
+                            const data = {
+                                projectId: record.id,
+                                userId: value,
+                            };
+                            dispatch(addUserProjectAction(data));
+                        }}
+                        placeholder="Search members"
+                    />
+                );
+                return (
+                    <div className="d-flex align-items-center gap-2">
+                        <Avatar.Group
+                            maxCount={2}
+                            maxStyle={{
+                                color: "#f56a00",
+                                backgroundColor: "#fde3cf",
+                            }}
+                        >
+                            {contentAvatar}
+                        </Avatar.Group>
+                        <Popover
+                            placement="bottom"
+                            title="Add members"
+                            content={() => {
+                                return autoComplete;
+                            }}
+                            trigger="click"
+                        >
+                            <Button
+                                style={{
+                                    borderRadius: "50%",
+                                    padding: "0px",
+                                    width: "34px",
+                                    height: "34px",
+                                }}
+                                className="d-flex align-items-center justify-content-center"
+                            >
+                                <PlusOutlined />
+                            </Button>
+                        </Popover>
+                    </div>
+                );
+            },
         },
         {
             title: "Action",
@@ -218,32 +317,28 @@ function ContentProjectManager() {
                         >
                             <EditOutlined />
                         </Button>
-                        <Button
-                            type="text"
-                            className="d-flex gap-1 align-items-center justify-content-center"
+                        <Popconfirm
+                            title="Delete the project"
+                            description="Are you sure to delete this project?"
+                            onConfirm={() => {
+                                dispatch(deleteProjectAction(record.id));
+                            }}
+                            okText="Yes"
+                            cancelText="No"
                         >
-                            <DeleteOutlined />
-                        </Button>
+                            <Button
+                                type="text"
+                                className="d-flex gap-1 align-items-center justify-content-center"
+                            >
+                                <DeleteOutlined />
+                            </Button>
+                        </Popconfirm>
                     </Space>
                 );
             },
         },
-        // {
-        //     title: "description",
-        //     dataIndex: "description",
-        //     key: "description",
-        //     ...getColumnSearchProps("description"),
-        //     sorter: (a, b) => a.description.length - b.description.length,
-        //     sortDirections: ["descend", "ascend"],
-        //     render: (text, record, index) => {
-        //         // console.log("text: ", text);
-        //         // console.log("record: ", record);
-        //         // console.log("index: ", index);
-        //         const textJsx = parse(text);
-        //         return textJsx;
-        //     },
-        // },
     ];
+
     return <Table rowKey={"id"} theme={"dark"} columns={columns} dataSource={projects} />;
 }
 export default ContentProjectManager;

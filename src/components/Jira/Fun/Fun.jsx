@@ -47,16 +47,42 @@ function Fun() {
         //     });
         // }
     };
+    const handleCreateProject = () => {
+        for (let index = 0; index < 1000; index++) {
+            const data = {
+                projectName: "Vũ Lê Bảo Long Đẹp Trai Nhất Vũ Trụ",
+                description: "Vũ Lê Bảo Long Đẹp Trai Nhất Vũ Trụ",
+                categoryId: Math.floor(Math.random() * 3) + 1,
+            };
+            axios({
+                url: `${DOMAIN}/Project/createProjectAuthorize`,
+                method: "POST",
+                data,
+                headers: { Authorization: `Bearer ${localStorage.getItem(TOKEN)}` },
+            });
+        }
+    };
     return (
-        <Button
-            style={{ zIndex: 99999 }}
-            type="primary"
-            onClick={() => {
-                handleEditAllProject();
-            }}
-        >
-            Edit All Project
-        </Button>
+        <>
+            <Button
+                style={{ zIndex: 99999 }}
+                type="primary"
+                onClick={() => {
+                    handleEditAllProject();
+                }}
+            >
+                Edit All Project
+            </Button>
+            <Button
+                style={{ zIndex: 99999 }}
+                type="primary"
+                onClick={() => {
+                    handleCreateProject();
+                }}
+            >
+                Create 1000 Project
+            </Button>
+        </>
     );
 }
 export default Fun;

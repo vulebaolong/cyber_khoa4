@@ -1,13 +1,13 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { PROJECT_CATEGORY, PROJECT_CATEGORY_API_SAGA } from "../../contants/jiraContant";
 import { loading } from "../../../util/showHideLoading";
-import { jiraApi } from "../../../services/jiraServices";
 import { STATE_CODE } from "../../../util/constant/statusCode";
+import { projectApi } from "../../../API/projectApi";
 
 function* projectCategorSaga({ type, payload }) {
     loading.show();
     try {
-        const { data, status } = yield call(() => jiraApi.getAllProjectCategory());
+        const { data, status } = yield call(() => projectApi.getAllProjectCategory());
         // console.log({ data, status });
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 
@@ -16,7 +16,7 @@ function* projectCategorSaga({ type, payload }) {
             payload: data.content,
         });
     } catch (error) {
-        console.log(error.response.data);
+        console.log(error);
     }
     loading.hide();
 }
