@@ -5,8 +5,11 @@ class UserApi extends baseApi {
     signinUser = (userLogin) => {
         return this.post(userLogin, `/users/signin`);
     };
-    getUser = (value) => {
+    getUserSearch = (value) => {
         return this.get(`/Users/getUser?keyword=${value}`);
+    };
+    getAllUser = () => {
+        return this.get(`/Users/getUser`);
     };
 }
 

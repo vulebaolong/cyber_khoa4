@@ -1,49 +1,84 @@
 import { Editor } from "@tinymce/tinymce-react";
-import { Select, Slider } from "antd";
-import { useState } from "react";
+import { Select } from "antd";
 import { useRef } from "react";
 import TimeTracking from "./TimeTracking";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllProjectsAction } from "../../../../redux/actions/jiraAction";
+import {
+    getAllProjectsAction,
+    getAllTaskTypeAction,
+    getAllUserAction,
+    getPriorityAction,
+} from "../../../../redux/actions/jiraAction";
 
-const options = [];
-for (let i = 10; i < 36; i++) {
-    options.push({
-        label: i.toString(36) + i,
-        value: i.toString(36) + i,
-    });
-}
 const onChangeSelectAssignees = (value) => {
-    console.log(`selected ${value}`);
+    console.log(`Select Assignees ${value}`);
+};
+const onSearchSelectAssignees = (value) => {
+    console.log(`Search SelectAssignee ${value}`);
 };
 const onChangeSelectProject = (value) => {
-    console.log(`selected ${value}`);
+    console.log(`Select Project ${value}`);
+};
+const onChangeSelectTaskType = (value) => {
+    console.log(`Select TypeId ${value}`);
+};
+const onChangeSelectPriority = (value) => {
+    console.log(`Select Priority ${value}`);
 };
 const onSearchSelectProject = (value) => {
-    console.log("search:", value);
+    console.log(`Search Project ${value}`);
 };
 
 function FormCreateTask(props) {
     const editorRef = useRef(null);
-    const { projects } = useSelector((state) => state.projectReducer);
+    const userSearchRef = useRef(null);
     const dispatch = useDispatch();
     const { values, touched, errors, handleChange, handleSubmit, setFieldValue } = props;
+
+    const { projectReducer, taskTypeReducer, priorityReducer, userReducer } = useSelector(
+        (state) => state
+    );
+    const { projects } = projectReducer;
+    const { taskType } = taskTypeReducer;
+    const { priority } = priorityReducer;
+    const { users } = userReducer;
+    const optionTaskType = taskType.map((task) => ({
+        label: task.taskType,
+        value: task.id,
+    }));
+    const optionSelectProject = projects.map((project) => {
+        return {
+            value: `${project.id}`,
+            label: `${project.projectName}`,
+        };
+    });
+    const optionSelectPriority = priority.map((priority) => {
+        return {
+            value: `${priority.priorityId}`,
+            label: `${priority.priority}`,
+        };
+    });
+    let optionSelectAssignees = users.map((user) => {
+        return {
+            value: `${user.userId}`,
+            label: `${user.name}`,
+        };
+    });
+
     const handleEditorChange = () => {
         if (editorRef.current) {
             console.log(editorRef.current.getContent());
             setFieldValue("description", editorRef.current.getContent());
         }
     };
-    const optionSelect = projects.map((project) => {
-        return {
-            value: `${project.id}`,
-            label: `${project.projectName}`,
-        };
-    });
+
     useEffect(() => {
+        dispatch(getAllUserAction());
+        dispatch(getPriorityAction());
         dispatch(getAllProjectsAction());
-    }, [dispatch]);
+        dispatch(getAllTaskTypeAction());
+    }, []);
     return (
         <form>
             <div className="">
@@ -51,35 +86,41 @@ function FormCreateTask(props) {
                 <Select
                     style={{ width: "100%" }}
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Select a project"
                     optionFilterProp="children"
                     onChange={onChangeSelectProject}
                     onSearch={onSearchSelectProject}
                     filterOption={(input, option) =>
                         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     }
-                    options={optionSelect}
+                    options={optionSelectProject}
                 />
             </div>
 
             <div className="row mt-3">
                 <div className="col-6">
-                    <div className="form-floating">
-                        <select name="priorityId" className="form-select" id="priorityId">
-                            <option value="54">Hight</option>
-                            <option value="55">Low</option>
-                        </select>
-                        <label htmlFor="priorityId">Priority</label>
-                    </div>
+                    <label className="form-label">Priority</label>
+                    <Select
+                        name="priorityId"
+                        value={priority[0]?.priority}
+                        style={{
+                            width: "100%",
+                        }}
+                        onChange={onChangeSelectPriority}
+                        options={optionSelectPriority}
+                    />
                 </div>
                 <div className="col-6">
-                    <div className="form-floating">
-                        <select name="typeId" className="form-select" id="typeId">
-                            <option value="54">New task</option>
-                            <option value="55">Bugs</option>
-                        </select>
-                        <label htmlFor="typeId">Task type</label>
-                    </div>
+                    <label className="form-label">Task type</label>
+                    <Select
+                        name="typeId"
+                        value={taskType[0]?.taskType}
+                        style={{
+                            width: "100%",
+                        }}
+                        onChange={onChangeSelectTaskType}
+                        options={optionTaskType}
+                    />
                 </div>
             </div>
 
@@ -88,14 +129,20 @@ function FormCreateTask(props) {
                     <label className="form-label">Assignees</label>
                     <Select
                         mode="multiple"
-                        allowClear
+                        showSearch
+                        // filterOption={(input, option) =>
+                        //     (option?.label ?? "")
+                        //         .toLowerCase()
+                        //         .includes(input.toLowerCase())
+                        // }
+                        optionFilterProp="label"
                         style={{
                             width: "100%",
                         }}
-                        placeholder="Please select"
-                        defaultValue={["a10", "c12"]}
+                        placeholder="Please select assignees"
                         onChange={onChangeSelectAssignees}
-                        options={options}
+                        onSearch={onSearchSelectAssignees}
+                        options={optionSelectAssignees}
                     />
                     <div className="row mt-3">
                         <div className="col-12">

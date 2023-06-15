@@ -1,7 +1,9 @@
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import {
-    GET_USER,
-    GET_USER_API_SAGA,
+    GET_ALL_USER,
+    GET_ALL_USER_API_SAGA,
+    GET_USER_SEARCH,
+    GET_USER_SEARCH_API_SAGA,
     SAVE_USER_LOGIN,
     USER_SIGNIN_API_SAGA,
 } from "../../contants/jiraContant";
@@ -42,21 +44,41 @@ export function* theodoiSignin() {
 }
 
 //getUserSaga
-function* getUserSaga({ type, payload }) {
+function* getUserSearchSaga({ type, payload }) {
     try {
-        const { data, status } = yield call(() => userApi.getUser(payload));
-        console.log("Saga - getUserSaga", { data, status });
+        const { data, status } = yield call(() => userApi.getUserSearch(payload));
+        console.log("Saga - getUserSearchSaga", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 
         yield put({
-            type: GET_USER,
+            type: GET_USER_SEARCH,
             payload: data.content,
         });
     } catch (error) {
         console.log(error);
     }
 }
-export function* theodoiGetUser() {
-    yield takeLatest(GET_USER_API_SAGA, getUserSaga);
+export function* theodoiGetUserSearchSaga() {
+    yield takeLatest(GET_USER_SEARCH_API_SAGA, getUserSearchSaga);
+}
+
+//getAllUserSaga
+function* getAllUserSaga({ type, payload }) {
+    try {
+        const { data, status } = yield call(() => userApi.getAllUser());
+        console.log("Saga - getAllUserSaga", { data, status });
+
+        if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
+
+        yield put({
+            type: GET_ALL_USER,
+            payload: data.content,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+export function* theodoiGetAllUserSaga() {
+    yield takeLatest(GET_ALL_USER_API_SAGA, getAllUserSaga);
 }

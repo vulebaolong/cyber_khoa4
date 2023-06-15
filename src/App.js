@@ -44,7 +44,7 @@ function App() {
                 <Route exact path="/detail/:id" component={Detail} />
                 <Route exact path="/profile" component={Profile} /> */}
             </Switch>
-            <Selectt />
+            {/* <Selectt /> */}
         </>
     );
 }

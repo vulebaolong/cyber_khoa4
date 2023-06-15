@@ -24,7 +24,7 @@ import {
     deleteProjectAction,
     deleteUserProjectAction,
     getAllProjectsAction,
-    getUserAction,
+    getUserSearchAction,
     initProjectEditAction,
 } from "../../../redux/actions/jiraAction";
 import { showDrawerAction } from "../../../redux/actions/drawerAction";
@@ -34,7 +34,7 @@ import { NavLink } from "react-router-dom";
 function ContentProjectManager() {
     const [value, setValue] = useState("");
     const { projects } = useSelector((state) => state.projectReducer);
-    const { users } = useSelector((state) => state.userReducer);
+    const { userSearch } = useSelector((state) => state.userReducer);
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
@@ -309,11 +309,11 @@ function ContentProjectManager() {
                                 clearTimeout(searchRef.current);
                             }
                             searchRef.current = setTimeout(() => {
-                                dispatch(getUserAction(value));
+                                dispatch(getUserSearchAction(value));
                             }, 300);
                         }}
                         value={value}
-                        options={users.map((item) => {
+                        options={userSearch.map((item) => {
                             return { label: item.name, value: `${item.userId}` };
                         })}
                         onChange={(text) => {
