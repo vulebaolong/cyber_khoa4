@@ -22,24 +22,33 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     addUserProjectAction,
     deleteProjectAction,
+    deleteUserProjectAction,
     getAllProjectsAction,
     getUserAction,
     initProjectEditAction,
 } from "../../../redux/actions/jiraAction";
-import { showEditDrawerAction } from "../../../redux/actions/drawerAction";
+import { showDrawerAction } from "../../../redux/actions/drawerAction";
 import FormEditProject from "../Form/FormEditProject/FormEditProject";
+import { NavLink } from "react-router-dom";
 
 function ContentProjectManager() {
+    const [value, setValue] = useState("");
     const { projects } = useSelector((state) => state.projectReducer);
     const { users } = useSelector((state) => state.userReducer);
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef(null);
+    const searchRef = useRef(null);
 
     const handleEdit = (record) => {
         dispatch(initProjectEditAction(record));
-        dispatch(showEditDrawerAction(FormEditProject));
+        dispatch(
+            showDrawerAction({
+                title: "Edit project",
+                ComponentDrawer: <FormEditProject />,
+            })
+        );
     };
 
     useEffect(() => {
@@ -168,7 +177,6 @@ function ContentProjectManager() {
         },
         {
             title: "projectName",
-            dataIndex: "projectName",
             key: "projectName",
             width: "20%",
             ...getColumnSearchProps("projectName"),
@@ -177,6 +185,14 @@ function ContentProjectManager() {
                 let projectName2 = item2.projectName.trim().toLowerCase();
                 if (projectName2 < projectName1) return -1;
                 return 1;
+            },
+            render: (text, itemProjectColName, index) => {
+                const { projectName } = itemProjectColName;
+                return (
+                    <NavLink to={`/projectdetail/${itemProjectColName.id}`}>
+                        {projectName}
+                    </NavLink>
+                );
             },
         },
         {
@@ -231,19 +247,57 @@ function ContentProjectManager() {
         {
             title: "Members",
             key: "members",
-            render: (_, record) => {
-                const contentAvatar = record.members.map((item) => {
+            render: (_, itemProject) => {
+                const { members } = itemProject;
+                const membersSource = members.map((item, index) => {
+                    return { ...item, key: index };
+                });
+                const columnsDeleteMember = [
+                    {
+                        title: "ID",
+                        dataIndex: "userId",
+                        key: "userId",
+                    },
+                    {
+                        title: "Avatar",
+                        dataIndex: "avatar",
+                        key: "avatar",
+                        render: (text) => (
+                            <Avatar src={<img src={text} alt="avatar" />} />
+                        ),
+                    },
+                    {
+                        title: "Name",
+                        dataIndex: "name",
+                        key: "name",
+                    },
+                    {
+                        title: "Action",
+                        dataIndex: "action",
+                        key: "action",
+                        render: (_, itemMember) => {
+                            return (
+                                <Button
+                                    type="text"
+                                    danger
+                                    onClick={() => {
+                                        const data = {
+                                            projectId: itemProject.id,
+                                            userId: itemMember.userId,
+                                        };
+                                        dispatch(deleteUserProjectAction(data));
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            );
+                        },
+                    },
+                ];
+                const contentAvatar = members.map((item) => {
                     return (
                         <Tooltip key={item.userId} title={item.name} placement="top">
-                            <Avatar
-                                style={{
-                                    backgroundColor: `#${Math.floor(
-                                        Math.random() * 16777215
-                                    ).toString(16)}`,
-                                }}
-                            >
-                                {item.name[0]}
-                            </Avatar>
+                            <Avatar src={<img src={item.avatar} alt="avatar" />} />
                         </Tooltip>
                     );
                 });
@@ -251,32 +305,67 @@ function ContentProjectManager() {
                     <AutoComplete
                         style={{ width: "100%" }}
                         onSearch={(value) => {
-                            dispatch(getUserAction(value));
+                            if (searchRef.current) {
+                                clearTimeout(searchRef.current);
+                            }
+                            searchRef.current = setTimeout(() => {
+                                dispatch(getUserAction(value));
+                            }, 300);
                         }}
+                        value={value}
                         options={users.map((item) => {
                             return { label: item.name, value: `${item.userId}` };
                         })}
-                        onSelect={(value) => {
+                        onChange={(text) => {
+                            setValue(text);
+                        }}
+                        onSelect={(valueSelect, option) => {
+                            setValue(option.label);
                             const data = {
-                                projectId: record.id,
-                                userId: value,
+                                projectId: itemProject.id,
+                                userId: valueSelect,
                             };
                             dispatch(addUserProjectAction(data));
                         }}
                         placeholder="Search members"
                     />
                 );
+                const contentDeleteMember = (
+                    <div style={{ width: "400px" }}>
+                        <Table
+                            dataSource={membersSource}
+                            columns={columnsDeleteMember}
+                            scroll={{ x: 240, y: 300 }}
+                        />
+                    </div>
+                );
                 return (
-                    <div className="d-flex align-items-center gap-2">
-                        <Avatar.Group
-                            maxCount={2}
-                            maxStyle={{
-                                color: "#f56a00",
-                                backgroundColor: "#fde3cf",
+                    <div
+                        className={`d-flex align-items-center ${
+                            members.length !== 0 ? "gap-2" : ""
+                        }`}
+                    >
+                        <Popover
+                            placement="bottom"
+                            title="Delete member"
+                            content={() => {
+                                return contentDeleteMember;
                             }}
+                            trigger="click"
                         >
-                            {contentAvatar}
-                        </Avatar.Group>
+                            <div style={{ cursor: "pointer" }}>
+                                <Avatar.Group
+                                    maxCount={2}
+                                    maxStyle={{
+                                        color: "#f56a00",
+                                        backgroundColor: "#fde3cf",
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    {contentAvatar}
+                                </Avatar.Group>
+                            </div>
+                        </Popover>
                         <Popover
                             placement="bottom"
                             title="Add members"

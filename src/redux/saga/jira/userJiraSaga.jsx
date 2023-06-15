@@ -18,7 +18,7 @@ function* signinUserSaga({ type, payload }) {
     yield delay(1000);
     try {
         const { data, status } = yield call(() => userApi.signinUser(values));
-        // console.log({ data, status });
+        console.log("Saga - signinUserSaga", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 
@@ -31,7 +31,7 @@ function* signinUserSaga({ type, payload }) {
         });
 
         // const { history } = yield select((state) => state.historyReducer);
-        history.push("/board");
+        history.push("/projectcreate");
     } catch (error) {
         console.log(error);
     }
@@ -45,7 +45,7 @@ export function* theodoiSignin() {
 function* getUserSaga({ type, payload }) {
     try {
         const { data, status } = yield call(() => userApi.getUser(payload));
-        console.log({ data, status });
+        console.log("Saga - getUserSaga", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 

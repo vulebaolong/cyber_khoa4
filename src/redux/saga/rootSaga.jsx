@@ -13,5 +13,7 @@ export function* rootSaga() {
         projectSaga.theodoiUpdateProject(),
         projectSaga.theodoiDeleteProject(),
         projectSaga.theodoiAddUserProject(),
+        projectSaga.theodoiDeleteUserProject(),
+        projectSaga.theodoiGetOneProject(),
     ]);
 }

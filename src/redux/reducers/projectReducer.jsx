@@ -1,8 +1,13 @@
-import { GET_ALL_PROJECTS, INIT_PROJECT_EDIT } from "../contants/jiraContant";
+import {
+    GET_ALL_PROJECTS,
+    INIT_PROJECT_EDIT,
+    PUT_PROJECT_DETAIL,
+} from "../contants/jiraContant";
 
 const initialState = {
     projects: [],
     projectEdit: {},
+    projectDetail: {},
 };
 
 export const projectReducer = (state = initialState, { type, payload }) => {
@@ -17,6 +22,12 @@ export const projectReducer = (state = initialState, { type, payload }) => {
             const copyState = JSON.parse(JSON.stringify(state));
             copyState.projectEdit = payload;
             return { ...state, projectEdit: copyState.projectEdit };
+        }
+
+        case PUT_PROJECT_DETAIL: {
+            const copyState = JSON.parse(JSON.stringify(state));
+            copyState.projectDetail = payload;
+            return { ...state, projectDetail: copyState.projectDetail };
         }
 
         default:

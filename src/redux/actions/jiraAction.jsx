@@ -2,7 +2,9 @@ import {
     ADD_USER_PROJECT_API_SAGA,
     CREATE_PROJECT_API_SAGA,
     DELETE_PROJECT_API_SAGE,
+    DELETE_USER_PROJECT_API_SAGA,
     GET_ALL_PROJECTS_API_SAGA,
+    GET_ONE_PROJECT_API_SAGA,
     GET_USER_API_SAGA,
     INIT_NOTIFICATION,
     INIT_PROJECT_EDIT,
@@ -77,6 +79,20 @@ export const getUserAction = (data) => {
 export const addUserProjectAction = (data) => {
     return {
         type: ADD_USER_PROJECT_API_SAGA,
+        payload: data,
+    };
+};
+
+export const deleteUserProjectAction = (data) => {
+    return {
+        type: DELETE_USER_PROJECT_API_SAGA,
+        payload: data,
+    };
+};
+
+export const getOneProjectAction = (data) => {
+    return {
+        type: GET_ONE_PROJECT_API_SAGA,
         payload: data,
     };
 };

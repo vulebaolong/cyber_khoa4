@@ -1,28 +1,15 @@
 import { Button, Drawer, Space } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { hideDrawerAction, showDrawerAction } from "../redux/actions/drawerAction";
-import axios from "axios";
+import { hideDrawerAction } from "../redux/actions/drawerAction";
 
 function DrawerRight() {
-    const { open, ContentComponentDrawer, handleSubmit } = useSelector(
+    const { open, ComponentDrawer, handleSubmit, title } = useSelector(
         (state) => state.drawerReducer
     );
     const dispatch = useDispatch();
-    const showDrawer = async () => {
-        const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-        const wait = function (second) {
-            return new Promise(function (resolve) {
-                setTimeout(resolve, second);
-            });
-        };
-        const arrPro = arr.map(() => {
-            const pro = wait(1000);
-            return pro;
-        });
-
-        const allPro = await Promise.all(arrPro);
-        console.log("đã ông", allPro);
-    };
+    // const showDrawer =  () => {
+    //
+    // };
     const onClose = () => {
         dispatch(hideDrawerAction());
     };
@@ -32,7 +19,7 @@ function DrawerRight() {
                 New account
             </Button> */}
             <Drawer
-                title="Create a new account"
+                title={title}
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -53,7 +40,7 @@ function DrawerRight() {
                     </Space>
                 }
             >
-                <ContentComponentDrawer />
+                {ComponentDrawer}
             </Drawer>
         </>
     );

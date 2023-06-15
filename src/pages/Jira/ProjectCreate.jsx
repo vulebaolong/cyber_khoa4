@@ -1,8 +1,8 @@
 import Main from "../../components/Jira/Main/Main";
-import ContentProjectSetting from "../../components/Jira/ProjectSetting/ContentProjectSetting";
-import HeaderMain from "./../../components/Jira/Main/Header/HeaderMain";
+import HeaderMain from "../../components/Jira/Main/Header/HeaderMain";
+import ContentProjectCreate from "../../components/Jira/ProjectCreate/ContentProjectCreate";
 
-function ProjectSetting() {
+function ProjectCreate() {
     return (
         <Main>
             <div className="d-flex justify-content-center">
@@ -10,11 +10,11 @@ function ProjectSetting() {
                     className="projectsetting"
                     style={{ maxWidth: "740px", width: "100%" }}
                 >
-                    <HeaderMain path="Project Details" title="Project Details" />
-                    <ContentProjectSetting />
+                    <HeaderMain path="ProjectCreate" title="Project Create" />
+                    <ContentProjectCreate />
                 </div>
             </div>
         </Main>
     );
 }
-export default ProjectSetting;
+export default ProjectCreate;

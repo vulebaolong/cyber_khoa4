@@ -19,7 +19,7 @@ export const notificationReducer = (state = initialState, { type, payload }) => 
             state.api[type]({
                 message,
                 description,
-                position,
+                placement: position,
             });
             return state;
         }

@@ -8,7 +8,7 @@ import {
 import { withFormik } from "formik";
 import * as Yup from "yup";
 
-function ContentProjectSetting(props) {
+function ContentProjectCreate(props) {
     const editorRef = useRef(null);
     const projectCategory = useSelector(
         (state) => state.projectCategoryReducer.projectCategory
@@ -128,12 +128,10 @@ const MyEnhancedForm = {
         const { dispatch } = props;
         dispatch(createProjectAction(values));
     },
-    displayName: "ContentProjectSetting",
+    displayName: "ContentProjectCreate",
 };
 const mapStateToProps = (state) => ({
     projectCategory: state.projectCategoryReducer.projectCategory,
 });
 
-export default connect(mapStateToProps)(
-    withFormik(MyEnhancedForm)(ContentProjectSetting)
-);
+export default connect(mapStateToProps)(withFormik(MyEnhancedForm)(ContentProjectCreate));

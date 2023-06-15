@@ -1,5 +1,17 @@
+import { useDispatch } from "react-redux";
 import style from "./SideBar.module.css";
+import { showDrawerAction } from "../../../redux/actions/drawerAction";
+import FormCreateTask from "./../Form/FormCreateTask/FormCreateTask";
 function SideBar() {
+    const dispatch = useDispatch();
+    const handleCreateIssue = () => {
+        dispatch(
+            showDrawerAction({
+                title: "Create task",
+                ComponentDrawer: <FormCreateTask />,
+            })
+        );
+    };
     return (
         <div className={`${style.sidebar}`}>
             <a className={`${style.logo}`} href="/">
@@ -60,7 +72,14 @@ function SideBar() {
                 <div className={`${style.item_icon}`}>
                     <i className="fa-solid fa-plus"></i>
                 </div>
-                <p className={`${style.item_text}`}>Create Issue</p>
+                <p
+                    className={`${style.item_text}`}
+                    onClick={() => {
+                        handleCreateIssue();
+                    }}
+                >
+                    Create task
+                </p>
             </div>
 
             <div className={`${style.about}`}>
@@ -68,7 +87,7 @@ function SideBar() {
                     <div className={`${style.item_icon}`}>
                         <i className="fa-sharp fa-regular fa-circle-question"></i>
                     </div>
-                    <p className={`${style.item_text}`}>Create Issue</p>
+                    <p className={`${style.item_text}`}>About</p>
                 </div>
             </div>
         </div>

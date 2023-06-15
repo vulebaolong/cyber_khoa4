@@ -124,7 +124,7 @@ function Menu() {
                 <div className="btn-group-vertical" role="group">
                     <NavLink
                         className={`${style.item} btn btn-secondary-danger rounded-2 mb-2`}
-                        to="/board"
+                        to="/projectcreate"
                     >
                         <div
                             className={`${style.icon} `}
@@ -133,16 +133,7 @@ function Menu() {
                         >
                             <i className="fa-solid fa-clapperboard"></i>
                         </div>
-                        <div>Kanban Board</div>
-                    </NavLink>
-                    <NavLink
-                        className={`${style.item} btn btn-secondary-danger rounded mb-2`}
-                        to="/createproject"
-                    >
-                        <div className={`${style.icon} `} autoComplete="off">
-                            <i className="fa-solid fa-gear"></i>
-                        </div>
-                        <div>Project settings</div>
+                        <div>Project Create</div>
                     </NavLink>
                     <NavLink
                         className={`${style.item} btn btn-secondary-danger rounded`}

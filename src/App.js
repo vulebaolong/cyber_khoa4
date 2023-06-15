@@ -7,7 +7,7 @@ import { JiraTemplate } from "./templates/JiraTemplate";
 import Loading from "./components/Other/Loading";
 import LoginJira from "./pages/Jira/LoginJira";
 import NotFound from "./pages/NotFound/NotFound";
-import ProjectSetting from "./pages/Jira/ProjectSetting";
+import ProjectSetting from "./pages/Jira/ProjectCreate";
 import BoardJira from "./pages/Jira/BoardJira";
 import ProjectManager from "./pages/Jira/ProjectManager";
 import DrawerRight from "./HOC/DrawerRight";
@@ -15,6 +15,9 @@ import DrawerRight from "./HOC/DrawerRight";
 import { notification } from "antd";
 import { useDispatch } from "react-redux";
 import { initNotificationAction } from "./redux/actions/jiraAction";
+import ProjectDetail from "./pages/Jira/ProjectDetail";
+import ProjectCreate from "./pages/Jira/ProjectCreate";
+import Selectt from "./components/Selectt";
 
 function App() {
     const [api, contextHolder] = notification.useNotification();
@@ -32,15 +35,16 @@ function App() {
             <Switch>
                 <UserLoginTemplate exact path="/" Component={LoginJira} />
                 <UserLoginTemplate exact path="/login" Component={LoginJira} />
-                <JiraTemplate exact path="/board" Component={BoardJira} />
-                <JiraTemplate exact path="/createproject" Component={ProjectSetting} />
+                <JiraTemplate exact path="/projectcreate" Component={ProjectCreate} />
                 <JiraTemplate exact path="/projectmanager" Component={ProjectManager} />
+                <JiraTemplate exact path="/projectdetail/:id" Component={ProjectDetail} />
                 <HomeTemplate path="*" Component={NotFound} />
                 {/* <Route exact path="/contact" component={Contact} />
                 <Route exact path="/about" component={About} />
                 <Route exact path="/detail/:id" component={Detail} />
                 <Route exact path="/profile" component={Profile} /> */}
             </Switch>
+            <Selectt />
         </>
     );
 }

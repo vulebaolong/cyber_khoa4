@@ -13,6 +13,10 @@ class ProjectApi extends baseApi {
         return this.get(`/Project/getAllProject`);
     };
 
+    getOneProject = (id) => {
+        return this.get(`/Project/getProjectDetail?id=${id}`);
+    };
+
     updateProject = (data) => {
         return this.put(data, `/Project/updateProject?projectId=${data.id}`);
     };
@@ -23,6 +27,10 @@ class ProjectApi extends baseApi {
 
     addUserProject = (data) => {
         return this.post(data, `/Project/assignUserProject`);
+    };
+
+    deleteUserProject = (data) => {
+        return this.post(data, `/Project/removeUserFromProject`);
     };
 }
 
