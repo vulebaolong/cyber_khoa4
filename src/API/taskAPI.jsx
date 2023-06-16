@@ -1,9 +1,9 @@
 import { baseApi } from "./baseApi";
 
-class TaskTypeApi extends baseApi {
+class TaskAPI extends baseApi {
     getAllTaskType = () => {
         return this.get(`/TaskType/getAll`);
     };
 }
 
-export const taskTypeApi = new TaskTypeApi();
+export const taskAPI = new TaskAPI();

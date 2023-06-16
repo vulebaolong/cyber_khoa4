@@ -2,8 +2,8 @@ import { all } from "redux-saga/effects";
 import * as userJira from "./jira/userJiraSaga";
 import * as projectCategory from "./jira/projectCategorySaga";
 import * as projectSaga from "./jira/projectSaga";
-import * as taskTypeSaga from "./jira/taskTypeSaga";
 import * as prioritySaga from "./jira/prioritySaga";
+import * as taskSaga from "./jira/taskSaga";
 
 export function* rootSaga() {
     yield all([
@@ -18,7 +18,8 @@ export function* rootSaga() {
         projectSaga.theodoiAddUserProject(),
         projectSaga.theodoiDeleteUserProject(),
         projectSaga.theodoiGetOneProject(),
-        taskTypeSaga.theodoiGetAllTaskType(),
+        taskSaga.theodoiGetAllTaskType(),
+        taskSaga.theodoicreateTask(),
         prioritySaga.theodoiGetAllPriority(),
     ]);
 }

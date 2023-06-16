@@ -2,7 +2,6 @@ import { loading } from "./../../../util/showHideLoading";
 import { call, delay, put, takeLatest } from "redux-saga/effects";
 import { STATE_CODE } from "./../../../util/constant/statusCode";
 import { GET_ALL_PRIORITY, GET_ALL_PRIORITY_API_SAGA } from "../../contants/jiraContant";
-import { taskTypeApi } from "../../../API/taskTypeApi";
 import { priorityApi } from "../../../API/priorityApi";
 
 // getAllPriority

@@ -52,6 +52,7 @@ function FormCreateTask(props) {
         console.log("name: ", name);
         setFieldValue(name, value);
     };
+
     const { projectReducer, taskTypeReducer, priorityReducer, userReducer } = useSelector(
         (state) => state
     );
