@@ -1,17 +1,22 @@
-import { Slider } from "antd";
+import { InputNumber, Slider } from "antd";
 import { useState } from "react";
 
-function TimeTracking() {
+function TimeTracking(props) {
+    const { onChangeInputRemaining, onChangeInputSpent, onChangeAntd } = props;
     const [timeTracking, setTimeTracking] = useState({
         timeTrackingSpent: 0,
         timeTrackingRemaining: 0,
     });
 
-    const handleTimeTrackingSpent = (e) => {
-        setTimeTracking({ ...timeTracking, timeTrackingSpent: +e.target.value });
+    const handleSpent = (value) => {
+        // onChangeInputSpent(value);
+        onChangeAntd(value, "timeTrackingSpent");
+        setTimeTracking({ ...timeTracking, timeTrackingSpent: +value });
     };
-    const timeTrackingRemaining = (e) => {
-        setTimeTracking({ ...timeTracking, timeTrackingRemaining: +e.target.value });
+    const handleRemaining = (value) => {
+        // onChangeInputRemaining(value);
+        onChangeAntd(value, "timeTrackingRemaining");
+        setTimeTracking({ ...timeTracking, timeTrackingRemaining: +value });
     };
 
     return (
@@ -23,7 +28,7 @@ function TimeTracking() {
             >
                 <div className="py-2">
                     <i
-                        style={{ fontSize: "1.4rem" }}
+                        style={{ fontSize: "1.3rem" }}
                         className="fa-sharp fa-solid fa-stopwatch"
                     ></i>
                 </div>
@@ -52,93 +57,34 @@ function TimeTracking() {
                 </div>
             </div>
             <div className="row mt-3">
-                <div className="col-6">
-                    <div className="">
-                        <label htmlFor="timeTrackingSpent" className="form-label">
-                            Time spent
-                        </label>
-                        <input
-                            name="timeTrackingSpent"
-                            type="number"
-                            className="form-control"
-                            id="timeTrackingSpent"
-                            placeholder="Number"
-                            min={0}
-                            onChange={(e) => {
-                                handleTimeTrackingSpent(e);
-                            }}
-                        />
-                    </div>
+                <div className="col-6 d-flex flex-column justify-content-between">
+                    <label className="form-label">Time spent</label>
+                    <InputNumber
+                        name="timeTrackingSpent"
+                        style={{
+                            width: "100%",
+                        }}
+                        min={1}
+                        onChange={handleSpent}
+                        placeholder="Number"
+                    />
                 </div>
-                <div className="col-6">
-                    <div className="">
-                        <label htmlFor="timeTrackingRemaining" className="form-label">
-                            Time remaining
-                        </label>
-                        <input
-                            name="timeTrackingRemaining"
-                            type="number"
-                            className="form-control"
-                            id="timeTrackingRemaining"
-                            placeholder="Number"
-                            min={0}
-                            onChange={(e) => {
-                                timeTrackingRemaining(e);
-                            }}
-                        />
-                    </div>
+                <div className="col-6 d-flex flex-column justify-content-between">
+                    <label htmlFor="timeTrackingRemaining" className="form-label">
+                        Time remaining
+                    </label>
+                    <InputNumber
+                        name="timeTrackingRemaining"
+                        style={{
+                            width: "100%",
+                        }}
+                        min={1}
+                        onChange={handleRemaining}
+                        placeholder="Number"
+                    />
                 </div>
             </div>
         </>
-        // <>
-        //     <label className="form-label">Time Tracking</label>
-        //     <Slider
-        //         defaultValue={0}
-        //         disabled={true}
-        //         value={+timeTracking.timeTrackingSpent}
-        //         max={
-        //             +timeTracking.timeTrackingSpent + +timeTracking.timeTrackingRemaining
-        //         }
-        //     />
-        // <div className="row mt-3">
-        //     <div className="col-6">
-        //         <div className="">
-        //             <label htmlFor="timeTrackingSpent" className="form-label">
-        //                 Time spent
-        //             </label>
-        //             <input
-        //                 name="timeTrackingSpent"
-        //                 type="number"
-        //                 className="form-control"
-        //                 id="timeTrackingSpent"
-        //                 placeholder="Number"
-        //                 min={0}
-        //                 onChange={(e) => {
-        //                     handleTimeTrackingSpent(e);
-        //                 }}
-        //             />
-        //         </div>
-        //     </div>
-        //     <div className="col-6">
-        //         <div className="">
-        //             <label htmlFor="timeTrackingRemaining" className="form-label">
-        //                 Time remaining
-        //             </label>
-        //             <input
-        //                 name="timeTrackingRemaining"
-        //                 type="number"
-        //                 className="form-control"
-        //                 id="timeTrackingRemaining"
-        //                 placeholder="Number"
-        //                 min={0}
-        //                 onChange={(e) => {
-        //                     timeTrackingRemaining(e);
-        //                 }}
-        //             />
-        //         </div>
-        //     </div>
-        // </div>
-        // </>
     );
 }
 export default TimeTracking;
