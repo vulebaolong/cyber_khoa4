@@ -8,6 +8,7 @@ import { loadingReducer } from "./loadingReducer";
 import { notificationReducer } from "./notificationReducer";
 import { taskTypeReducer } from "./taskTypeReducer";
 import { priorityReducer } from "./priorityReducer";
+import { statusReducer } from "./statusReducer";
 export const rootReducer = combineReducers({
     jiraReducer,
     userReducer,
@@ -18,4 +19,5 @@ export const rootReducer = combineReducers({
     notificationReducer,
     taskTypeReducer,
     priorityReducer,
+    statusReducer,
 });

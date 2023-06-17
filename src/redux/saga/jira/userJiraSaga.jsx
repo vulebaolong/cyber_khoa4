@@ -2,6 +2,8 @@ import { call, delay, put, takeLatest } from "redux-saga/effects";
 import {
     GET_ALL_USER,
     GET_ALL_USER_API_SAGA,
+    GET_USER_BY_PROJECT,
+    GET_USER_BY_PROJECT_API_SAGA,
     GET_USER_SEARCH,
     GET_USER_SEARCH_API_SAGA,
     SAVE_USER_LOGIN,
@@ -17,7 +19,6 @@ import { TOKEN, USER_LOGIN } from "../../../API/baseApi";
 function* signinUserSaga({ type, payload }) {
     const { values } = payload;
     loading.show();
-    yield delay(1000);
     try {
         const { data, status } = yield call(() => userApi.signinUser(values));
         console.log("Saga - signinUserSaga", { data, status });
@@ -32,7 +33,6 @@ function* signinUserSaga({ type, payload }) {
             payload: data.content,
         });
 
-        // const { history } = yield select((state) => state.historyReducer);
         history.push("/projectcreate");
     } catch (error) {
         console.log(error);
@@ -81,4 +81,30 @@ function* getAllUserSaga({ type, payload }) {
 }
 export function* theodoiGetAllUserSaga() {
     yield takeLatest(GET_ALL_USER_API_SAGA, getAllUserSaga);
+}
+
+//getUserByProjectId
+function* getUserByProjectId({ type, payload }) {
+    try {
+        const { data, status } = yield call(() => userApi.getUserByProjectId(payload));
+        console.log("Saga - getUserByProjectId", { data, status });
+
+        // if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
+
+        yield put({
+            type: GET_USER_BY_PROJECT,
+            payload: data.content,
+        });
+    } catch (error) {
+        console.log(error);
+        if (error.response.data.content === "User not found in the project!") {
+            yield put({
+                type: GET_USER_BY_PROJECT,
+                payload: [],
+            });
+        }
+    }
+}
+export function* theodoiGetUserByProjectId() {
+    yield takeLatest(GET_USER_BY_PROJECT_API_SAGA, getUserByProjectId);
 }

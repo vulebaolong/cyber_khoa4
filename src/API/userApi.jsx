@@ -11,6 +11,10 @@ class UserApi extends baseApi {
     getAllUser = () => {
         return this.get(`/Users/getUser`);
     };
+
+    getUserByProjectId = (id) => {
+        return this.get(`/Users/getUserByProjectId?idProject=${id}`);
+    };
 }
 
 export const userApi = new UserApi();

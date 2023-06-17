@@ -26,12 +26,8 @@ function* createProject({ type, payload }) {
     try {
         const { data, status } = yield call(() => projectApi.createProject(payload));
         console.log("Saga - createProject", { data, status });
-        // yield put({
-        //     type: CREATE_PROJECT,
-        //     payload: data.content,
-        // });
-        // const { history } = yield select((state) => state.historyReducer);
-        // history.push("/board");
+
+        history.push("/projectmanager");
     } catch (error) {
         console.log(error.response.data);
     }

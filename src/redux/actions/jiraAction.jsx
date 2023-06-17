@@ -1,13 +1,16 @@
 import {
     ADD_USER_PROJECT_API_SAGA,
     CREATE_PROJECT_API_SAGA,
+    CREATE_TASK_API_SAGA,
     DELETE_PROJECT_API_SAGE,
     DELETE_USER_PROJECT_API_SAGA,
     GET_ALL_PRIORITY_API_SAGA,
     GET_ALL_PROJECTS_API_SAGA,
+    GET_ALL_STATUS_API_SAGA,
     GET_ALL_TASKTPYE_API_SAGA,
     GET_ALL_USER_API_SAGA,
     GET_ONE_PROJECT_API_SAGA,
+    GET_USER_BY_PROJECT_API_SAGA,
     GET_USER_SEARCH_API_SAGA,
     INIT_NOTIFICATION,
     INIT_PROJECT_EDIT,
@@ -117,6 +120,27 @@ export const getPriorityAction = (data) => {
 export const getAllUserAction = (data) => {
     return {
         type: GET_ALL_USER_API_SAGA,
+        payload: data,
+    };
+};
+
+export const createTaskAction = (data) => {
+    return {
+        type: CREATE_TASK_API_SAGA,
+        payload: data,
+    };
+};
+
+export const getAllStatusAction = (data) => {
+    return {
+        type: GET_ALL_STATUS_API_SAGA,
+        payload: data,
+    };
+};
+
+export const getUserByProjectIdAction = (data) => {
+    return {
+        type: GET_USER_BY_PROJECT_API_SAGA,
         payload: data,
     };
 };

@@ -60,6 +60,7 @@ function TimeTracking(props) {
                 <div className="col-6 d-flex flex-column justify-content-between">
                     <label className="form-label">Time spent</label>
                     <InputNumber
+                        type="number"
                         name="timeTrackingSpent"
                         style={{
                             width: "100%",
@@ -74,6 +75,7 @@ function TimeTracking(props) {
                         Time remaining
                     </label>
                     <InputNumber
+                        type="number"
                         name="timeTrackingRemaining"
                         style={{
                             width: "100%",

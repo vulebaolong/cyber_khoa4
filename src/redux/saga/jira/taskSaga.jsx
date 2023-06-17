@@ -5,8 +5,11 @@ import {
     CREATE_TASK_API_SAGA,
     GET_ALL_TASKTPYE_API_SAGA,
     GET_ALL_TASKTYPE,
+    HIDE_DRAWER,
 } from "../../contants/jiraContant";
 import { taskAPI } from "../../../API/taskAPI";
+import { projectApi } from "../../../API/projectApi";
+import { history } from "../../../util/lib/history";
 
 // getAllTaskType
 function* getAllTaskType({ type, payload }) {
@@ -31,24 +34,26 @@ export function* theodoiGetAllTaskType() {
     yield takeLatest(GET_ALL_TASKTPYE_API_SAGA, getAllTaskType);
 }
 
-// getAllTaskType
+// createTask
 function* createTask({ type, payload }) {
+    console.log(payload);
     loading.show();
-    yield delay(1000);
     try {
-        const { data, status } = yield call(() => taskAPI.getAllTaskType());
-        console.log("Saga - getAllTaskType", { data, status });
+        const { data, status } = yield call(() => projectApi.createTask(payload));
+        console.log("Saga - createTask", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
 
         yield put({
-            type: GET_ALL_TASKTYPE,
-            payload: data.content,
+            type: HIDE_DRAWER,
         });
+        loading.hide();
+
+        history.push(`/projectdetail/${payload.projectId}`);
     } catch (error) {
         console.log(error);
+        loading.hide();
     }
-    loading.hide();
 }
 export function* theodoicreateTask() {
     yield takeLatest(CREATE_TASK_API_SAGA, createTask);

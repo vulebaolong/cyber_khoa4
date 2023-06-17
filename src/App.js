@@ -17,7 +17,6 @@ import { useDispatch } from "react-redux";
 import { initNotificationAction } from "./redux/actions/jiraAction";
 import ProjectDetail from "./pages/Jira/ProjectDetail";
 import ProjectCreate from "./pages/Jira/ProjectCreate";
-import Selectt from "./components/Selectt";
 
 function App() {
     const [api, contextHolder] = notification.useNotification();
@@ -44,7 +43,6 @@ function App() {
                 <Route exact path="/detail/:id" component={Detail} />
                 <Route exact path="/profile" component={Profile} /> */}
             </Switch>
-            {/* <Selectt /> */}
         </>
     );
 }

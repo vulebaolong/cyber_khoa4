@@ -32,6 +32,10 @@ class ProjectApi extends baseApi {
     deleteUserProject = (data) => {
         return this.post(data, `/Project/removeUserFromProject`);
     };
+
+    createTask = (data) => {
+        return this.post(data, `/Project/createTask`);
+    };
 }
 
 export const projectApi = new ProjectApi();

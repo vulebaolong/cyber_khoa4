@@ -6,7 +6,7 @@ import parse from "html-react-parser";
 function InfoMain() {
     const { projectDetail } = useSelector((state) => state.projectReducer);
     const { members, description } = projectDetail;
-    // console.log(description);
+    console.log(projectDetail);
 
     const renderAvatar = () => {
         return members.map((item) => {

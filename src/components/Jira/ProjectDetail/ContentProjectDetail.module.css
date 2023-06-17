@@ -1,6 +1,7 @@
 .card {
     padding: 0.5rem;
     background-color: var(--bs-card-cap-bg);
+    height: auto;
 }
 
 .card li {
