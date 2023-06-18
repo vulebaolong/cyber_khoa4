@@ -36,3 +36,5 @@ export const GET_ALL_USER = "GET_ALL_USER";
 export const CREATE_TASK = "CREATE_TASK";
 export const GET_ALL_STATUS = "GET_ALL_STATUS";
 export const GET_USER_BY_PROJECT = "GET_USER_BY_PROJECT";
+export const GET_ONE_TASK = "GET_ONE_TASK";
+export const COMPONENT_CONTENT_MODAL = "COMPONENT_MODAL";

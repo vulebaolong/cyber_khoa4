@@ -9,6 +9,8 @@ import { notificationReducer } from "./notificationReducer";
 import { taskTypeReducer } from "./taskTypeReducer";
 import { priorityReducer } from "./priorityReducer";
 import { statusReducer } from "./statusReducer";
+import { taskReducer } from "./taskReducer";
+import { modalReducer } from "./modalReducer";
 export const rootReducer = combineReducers({
     jiraReducer,
     userReducer,
@@ -20,4 +22,6 @@ export const rootReducer = combineReducers({
     taskTypeReducer,
     priorityReducer,
     statusReducer,
+    taskReducer,
+    modalReducer,
 });

@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import SideBar from "./../components/Jira/SideBar/SideBar";
 import Menu from "./../components/Jira/Menu/Menu";
-import ModalMain from "./../components/Jira/Main/ModalMain/ModalMain";
+import Modal from "../HOC/Modal";
 
 export const JiraTemplate = (props) => {
     let { Component, ...restRoute } = props;
@@ -15,7 +15,7 @@ export const JiraTemplate = (props) => {
                         <SideBar />
                         <Menu />
                         <Component {...propsRoute} />
-                        <ModalMain />
+                        <Modal />
                     </>
                 );
             }}

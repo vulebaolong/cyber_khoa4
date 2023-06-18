@@ -18,27 +18,27 @@ import { withFormik } from "formik";
 import { sendHandleSubmitAction } from "../../../../redux/actions/drawerAction";
 
 const onSearchSelectProject = (value) => {
-    console.log(`Search Project ${value}`);
+    // console.log(`Search Project ${value}`);
 };
 const onSearchSelectAssignees = (value) => {
-    console.log(`Search SelectAssignee ${value}`);
+    // console.log(`Search SelectAssignee ${value}`);
 };
 
 const onChangeSelectAssignees = (value) => {
-    console.log(`Select Assignees ${value}`);
+    // console.log(`Select Assignees ${value}`);
 };
 const onChangeSelectProject = (value, name) => {
-    console.log(`Select Project ${value} `);
-    console.log("name: ", name);
+    // console.log(`Select Project ${value} `);
+    // console.log("name: ", name);
 };
 const onChangeSelectTaskType = (value) => {
-    console.log(`Select TypeId ${value}`);
+    // console.log(`Select TypeId ${value}`);
 };
 const onChangeSelectPriority = (value) => {
-    console.log(`Select Priority ${value}`);
+    // console.log(`Select Priority ${value}`);
 };
 const onChangeInputOriginalEstimate = (value) => {
-    console.log(`Input OriginalEstimate ${value}`);
+    // console.log(`Input OriginalEstimate ${value}`);
 };
 const onChangeInputRemaining = (value) => {
     console.log(`Input Time Remaining ${value}`);
@@ -52,7 +52,7 @@ function FormCreateTask(props) {
     const editorRef = useRef(null);
     const dispatch = useDispatch();
     const { values, touched, errors, handleChange, handleSubmit, setFieldValue } = props;
-    console.log(values);
+    console.log("values", values);
     const onChangeAntd = (value, name) => {
         console.log("value: ", value);
         console.log("name: ", name);
@@ -104,7 +104,7 @@ function FormCreateTask(props) {
 
     const handleEditorChange = () => {
         if (editorRef.current) {
-            console.log(editorRef.current.getContent());
+            // console.log(editorRef.current.getContent());
             setFieldValue("description", editorRef.current.getContent());
         }
     };
@@ -150,7 +150,7 @@ function FormCreateTask(props) {
                 <label className="form-label">Status</label>
                 <Select
                     name="statusId"
-                    value={optionSelectStatus[0]?.label}
+                    value={`${values.statusId}`}
                     style={{
                         width: "100%",
                     }}
@@ -177,7 +177,6 @@ function FormCreateTask(props) {
                     <label className="form-label">Priority</label>
                     <Select
                         name="priorityId"
-                        defaultValue={priority[0]?.priority}
                         value={`${values.priorityId}`}
                         style={{
                             width: "100%",
@@ -192,7 +191,7 @@ function FormCreateTask(props) {
                     <label className="form-label">Task type</label>
                     <Select
                         name="typeId"
-                        defaultValue={taskType[0]?.taskType}
+                        value={+values.typeId}
                         style={{
                             width: "100%",
                         }}
@@ -305,23 +304,23 @@ const MyEnhancedForm = {
     enableReinitialize: true,
     mapPropsToValues: (props) => {
         const { projects, status, priority, taskType } = props;
-
+        console.log(priority.length > 0 ? `${priority[0]?.priorityId}` : []);
         return {
             listUserAsign: [],
             taskName: "",
             description: "",
-            statusId: +status[0]?.statusId,
+            statusId: status[0]?.statusId,
             originalEstimate: 0,
             timeTrackingSpent: 0,
             timeTrackingRemaining: 0,
-            projectId: +projects[0]?.id,
-            typeId: +taskType[0]?.id,
-            priorityId: +priority[0]?.priorityId,
+            projectId: projects.length > 0 ? `${projects[0]?.id}` : [],
+            typeId: taskType.length > 0 ? `${taskType[0]?.id}` : [],
+            priorityId: priority.length > 0 ? `${priority[0]?.priorityId}` : [],
         };
     },
     // validationSchema: Yup.object().shape({}),
     handleSubmit: (values, { props, setSubmitting }) => {
-        console.log("values", values);
+        console.log("values submit", values);
         const { dispatch } = props;
         dispatch(createTaskAction(values));
     },

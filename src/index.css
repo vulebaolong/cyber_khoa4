@@ -58,3 +58,7 @@ a {
     background-color: rgba(100, 116, 139, 0.502);
 }
 /* SCROLLBAR - end */
+
+.modal-backdrop {
+    z-index: 1049;
+}

@@ -8,7 +8,6 @@ import {
     HIDE_DRAWER,
 } from "../../contants/jiraContant";
 import { taskAPI } from "../../../API/taskAPI";
-import { projectApi } from "../../../API/projectApi";
 import { history } from "../../../util/lib/history";
 
 // getAllTaskType
@@ -39,7 +38,7 @@ function* createTask({ type, payload }) {
     console.log(payload);
     loading.show();
     try {
-        const { data, status } = yield call(() => projectApi.createTask(payload));
+        const { data, status } = yield call(() => taskAPI.createTask(payload));
         console.log("Saga - createTask", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);

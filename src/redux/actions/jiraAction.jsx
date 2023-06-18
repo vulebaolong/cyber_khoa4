@@ -1,5 +1,6 @@
 import {
     ADD_USER_PROJECT_API_SAGA,
+    COMPONENT_CONTENT_MODAL,
     CREATE_PROJECT_API_SAGA,
     CREATE_TASK_API_SAGA,
     DELETE_PROJECT_API_SAGE,
@@ -141,6 +142,13 @@ export const getAllStatusAction = (data) => {
 export const getUserByProjectIdAction = (data) => {
     return {
         type: GET_USER_BY_PROJECT_API_SAGA,
+        payload: data,
+    };
+};
+
+export const componentContenModal = (data) => {
+    return {
+        type: COMPONENT_CONTENT_MODAL,
         payload: data,
     };
 };

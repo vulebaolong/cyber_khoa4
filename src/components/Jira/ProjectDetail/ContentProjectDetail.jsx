@@ -1,9 +1,12 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import style from "./ContentProjectDetail.module.css";
 import { Avatar, Tooltip } from "antd";
+import { componentContenModal } from "../../../redux/actions/jiraAction";
+import ContentProjectDetailModal from "./ContentProjectDetailModal";
 
 function ContentProjectDetail(props) {
     const { projectDetail } = useSelector((state) => state.projectReducer);
+    const dispatch = useDispatch();
     const { lstTask } = projectDetail;
     console.log(lstTask);
     const renderAvatar = (users) => {
@@ -17,7 +20,6 @@ function ContentProjectDetail(props) {
     };
     const renderListItemTask = (listItemTask) => {
         return listItemTask.map((item, index) => {
-            console.log(item);
             const renderIconPriority = () => {
                 const { priority } = item.priorityTask;
                 let color = "white";
@@ -35,6 +37,9 @@ function ContentProjectDetail(props) {
                     className="list-group-item border border-secondary rounded-2"
                     data-bs-toggle="modal"
                     data-bs-target="#modalMain"
+                    onClick={() => {
+                        dispatch(componentContenModal(<ContentProjectDetailModal />));
+                    }}
                 >
                     <div className="">
                         <p className="">{item.taskName}</p>

@@ -1,3 +1,4 @@
+import { vlbl } from "vlbl";
 import { GET_ALL_STATUS } from "../contants/jiraContant";
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
 export const statusReducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case GET_ALL_STATUS: {
-            const copyState = JSON.parse(JSON.stringify(state));
+            const copyState = vlbl.copy(state);
             copyState.status = payload;
             return { ...state, status: copyState.status };
         }
