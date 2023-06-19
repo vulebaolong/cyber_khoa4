@@ -1,9 +1,11 @@
 import { Button } from "antd";
 import axios from "axios";
+import { useEffect } from "react";
 
 function Fun() {
     const DOMAIN = "https://casestudy.cyberlearn.vn/api";
     const TOKEN = "access_token";
+
     const handleEditAllProject = async () => {
         const result = await axios({
             url: `${DOMAIN}/Project/getAllProject`,
@@ -68,7 +70,7 @@ function Fun() {
                 style={{ zIndex: 99999 }}
                 type="primary"
                 onClick={() => {
-                    handleEditAllProject();
+                    // handleEditAllProject();
                 }}
             >
                 Edit All Project

@@ -52,7 +52,6 @@ function FormCreateTask(props) {
     const editorRef = useRef(null);
     const dispatch = useDispatch();
     const { values, touched, errors, handleChange, handleSubmit, setFieldValue } = props;
-    console.log("values", values);
     const onChangeAntd = (value, name) => {
         console.log("value: ", value);
         console.log("name: ", name);

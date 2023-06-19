@@ -204,10 +204,9 @@ export function* theodoiDeleteUserProject() {
 }
 
 //deleteUserProjectSaga
-function* getOneProject({ type, payload }) {
-    loading.show();
+function* getOneProject({ type, payload, isLoading = true }) {
+    if (isLoading) loading.show();
     try {
-        console.log(payload);
         const { data, status } = yield call(() => projectApi.getOneProject(payload));
         console.log("Saga - getOneProject", { data, status });
 
@@ -218,10 +217,10 @@ function* getOneProject({ type, payload }) {
             payload: data.content,
         });
 
-        loading.hide();
+        if (isLoading) loading.hide();
     } catch (error) {
         console.log(error);
-        loading.hide();
+        if (isLoading) loading.hide();
         yield put({
             type: SHOW_NOTIFICATION,
             payload: {

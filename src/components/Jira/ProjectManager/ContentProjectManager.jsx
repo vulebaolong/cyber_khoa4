@@ -53,7 +53,7 @@ function ContentProjectManager() {
 
     useEffect(() => {
         dispatch(getAllProjectsAction());
-    }, [dispatch]);
+    }, []);
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();

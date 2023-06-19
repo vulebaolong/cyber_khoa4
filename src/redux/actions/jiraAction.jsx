@@ -1,5 +1,7 @@
 import {
     ADD_USER_PROJECT_API_SAGA,
+    CHANGE_ASSIGNEES,
+    CHANGE_TASK,
     COMPONENT_CONTENT_MODAL,
     CREATE_PROJECT_API_SAGA,
     CREATE_TASK_API_SAGA,
@@ -11,12 +13,15 @@ import {
     GET_ALL_TASKTPYE_API_SAGA,
     GET_ALL_USER_API_SAGA,
     GET_ONE_PROJECT_API_SAGA,
+    GET_ONE_TASK_API_SAGA,
     GET_USER_BY_PROJECT_API_SAGA,
     GET_USER_SEARCH_API_SAGA,
     INIT_NOTIFICATION,
     INIT_PROJECT_EDIT,
     PROJECT_CATEGORY_API_SAGA,
     UPDATE_PROJECT_API_SAGE,
+    UPDATE_STATUS_API_SAGA,
+    UPDATE_TASK_API_SAGA,
     USER_SIGNIN_API_SAGA,
 } from "../contants/jiraContant";
 
@@ -146,9 +151,44 @@ export const getUserByProjectIdAction = (data) => {
     };
 };
 
-export const componentContenModal = (data) => {
+export const componentContenModalAction = (data) => {
     return {
         type: COMPONENT_CONTENT_MODAL,
+        payload: data,
+    };
+};
+
+export const getOneTaskAction = (data) => {
+    return {
+        type: GET_ONE_TASK_API_SAGA,
+        payload: data,
+    };
+};
+
+export const updateStatusTaskAction = (data) => {
+    return {
+        type: UPDATE_STATUS_API_SAGA,
+        payload: data,
+    };
+};
+
+export const changeTaskAction = (data) => {
+    return {
+        type: CHANGE_TASK,
+        payload: data,
+    };
+};
+
+export const changeAssigneesAction = (data) => {
+    return {
+        type: CHANGE_ASSIGNEES,
+        payload: data,
+    };
+};
+
+export const updateTaskAction = (data) => {
+    return {
+        type: UPDATE_TASK_API_SAGA,
         payload: data,
     };
 };

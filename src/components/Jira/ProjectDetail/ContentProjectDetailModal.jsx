@@ -3,22 +3,44 @@ import style from "./ContentProjectDetail.module.css";
 import parse from "html-react-parser";
 import { withFormik } from "formik";
 import { useEffect } from "react";
-import { getAllStatusAction, getPriorityAction } from "../../../redux/actions/jiraAction";
-import { Avatar, Button, Input, InputNumber, Select } from "antd";
+import {
+    changeAssigneesAction,
+    changeTaskAction,
+    getAllStatusAction,
+    getAllTaskTypeAction,
+    getPriorityAction,
+    updateStatusTaskAction,
+} from "../../../redux/actions/jiraAction";
+import { Avatar, Button, Input, InputNumber, Select, Space, Typography } from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
+import { useRef } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import { useState } from "react";
+const { Text, Link } = Typography;
 
 const onSearchSelectAssignees = (value) => {
     // console.log(`Search SelectAssignee ${value}`);
 };
 
 function ContentProjectDetailModal(props) {
+    const [showEditor, setShowEditor] = useState(false);
     const dispatch = useDispatch();
+    const editorRef = useRef(null);
+
     const { values, touched, errors, handleChange, handleSubmit, setFieldValue } = props;
-    const { taskReducer, statusReducer, priorityReducer } = useSelector((state) => state);
+    const {
+        taskReducer,
+        statusReducer,
+        priorityReducer,
+        taskTypeReducer,
+        projectReducer,
+    } = useSelector((state) => state);
     const { task } = taskReducer;
     const { status } = statusReducer;
     const { priority } = priorityReducer;
-
+    const { taskType } = taskTypeReducer;
+    const { projectDetail } = projectReducer;
+    console.log(task);
     const onChangeAntd = (value, name) => {
         console.log("value: ", value);
         console.log("name: ", name);
@@ -36,10 +58,30 @@ function ContentProjectDetailModal(props) {
             label: `${priority.priority}`,
         };
     });
+    const optionSelectTask = taskType.map((task) => {
+        return {
+            value: `${task.id}`,
+            label: `${task.taskType}`,
+        };
+    });
+    const optionSelectAssignees = projectDetail.members
+        .filter((mem) => {
+            const index = task.assigness.findIndex((us) => us.id === mem.userId);
+            if (index === -1) {
+                return true;
+            }
+        })
+        .map((user) => {
+            return {
+                value: `${user.userId}`,
+                label: `${user.name}`,
+            };
+        });
 
     useEffect(() => {
         dispatch(getAllStatusAction());
         dispatch(getPriorityAction());
+        dispatch(getAllTaskTypeAction());
     }, []);
 
     const renderAssignees = () => {
@@ -49,22 +91,124 @@ function ContentProjectDetailModal(props) {
                     key={user.id}
                     className={`${style.reporter_item} d-flex align-items-center gap-1`}
                 >
-                    <Avatar src={user.avatar} size={25} />
-                    <div>{user.name}</div>
+                    <Avatar src={user.avatar} size={20} />
+                    <Text>{user.name}</Text>
                     <CloseOutlined />
                 </div>
             );
         });
     };
+    const handleEditorChange = () => {
+        if (editorRef.current) {
+            console.log(editorRef.current.getContent());
+            // setHistoryDescription(editorRef.current.getContent());
+            // setFieldValue("description", editorRef.current.getContent());
+        }
+    };
+    const renderDescription = () => {
+        const editor = (
+            <Space direction="vertical" style={{ width: "100%" }}>
+                <Editor
+                    style={{ with: "100%" }}
+                    name="description"
+                    initialValue={task.description}
+                    apiKey="hngjtnxm2rdvc4vl3dlgk44ds8y6fpb9ijo0fsxku53q8f0b"
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: [
+                            "advlist",
+                            "autolink",
+                            "lists",
+                            "link",
+                            "image",
+                            "charmap",
+                            "preview",
+                            "anchor",
+                            "searchreplace",
+                            "visualblocks",
+                            "code",
+                            "fullscreen",
+                            "insertdatetime",
+                            "media",
+                            "table",
+                            "code",
+                            "help",
+                            "wordcount",
+                        ],
+                        toolbar:
+                            "undo redo | blocks | " +
+                            "bold italic forecolor | alignleft aligncenter " +
+                            "alignright alignjustify | bullist numlist outdent indent | " +
+                            "removeformat | help",
+                        content_style:
+                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                        skin: "oxide-dark",
+                        content_css: "dark",
+                    }}
+                    onEditorChange={handleEditorChange}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            handleChangeTask(
+                                "description",
+                                editorRef.current.getContent()
+                            );
+                            setShowEditor(false);
+                        }}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        type="text"
+                        onClick={() => {
+                            setShowEditor(false);
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                </Space>
+            </Space>
+        );
+        const jsxDescription = (
+            <div
+                onClick={() => {
+                    setShowEditor(!showEditor);
+                }}
+            >
+                {parse(task.description)}
+            </div>
+        );
+        return <>{showEditor ? editor : jsxDescription}</>;
+    };
+
+    const handleChangeTask = (name, value) => {
+        dispatch(changeTaskAction({ name, value }));
+    };
     return (
         <>
             <div className="modal-header">
                 <div className="headerleft">
-                    <div className={`${style.header_item}`}>
+                    <div className="d-flex align-items-center">
                         <div className="">
                             <i className="fa-solid fa-square-check" />
                         </div>
-                        <div className="m-0">{task.taskName}</div>
+
+                        <div className="m-0">
+                            <Select
+                                value={`${task.typeId}`}
+                                style={{ width: 100 }}
+                                bordered={false}
+                                options={optionSelectTask}
+                                onChange={(value) => {
+                                    handleChangeTask("typeId", value);
+                                }}
+                            />
+                            <span>{task.taskId}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -104,7 +248,7 @@ function ContentProjectDetailModal(props) {
                         {/* Description */}
                         <div className="">
                             <p>Description</p>
-                            {parse(task.description)}
+                            {renderDescription()}
                         </div>
 
                         <p>Comments</p>
@@ -166,22 +310,59 @@ function ContentProjectDetailModal(props) {
                                     width: "100%",
                                 }}
                                 onChange={(value) => {
+                                    dispatch(
+                                        updateStatusTaskAction({
+                                            taskId: task.taskId,
+                                            statusId: value,
+                                            projectId: task.projectId,
+                                        })
+                                    );
+                                    handleChangeTask("statusId", value);
                                     onChangeAntd(+value, "statusId");
                                 }}
                                 options={optionSelectStatus}
                             />
                         </div>
 
-                        {/* Assignees and */}
+                        {/* Assignees */}
                         <div className="assigness mt-3">
                             <label className="form-label">Assignees</label>
                             <div className="d-flex align-items-center gap-3 flex-wrap">
                                 {renderAssignees()}
                             </div>
 
-                            <Button type="link" className="d-flex align-items-center">
-                                <PlusOutlined /> Add more
-                            </Button>
+                            <div className="" style={{ display: "inline-block" }}>
+                                <Button type="link" className="d-flex align-items-center">
+                                    <PlusOutlined /> Add more
+                                </Button>
+                                <Select
+                                    value={values.listUserAsign}
+                                    showSearch
+                                    optionFilterProp="label"
+                                    style={{
+                                        width: "100%",
+                                    }}
+                                    placeholder="Please select assignees"
+                                    onChange={(value) => {
+                                        console.log(value);
+                                        let userSelect = projectDetail.members.find(
+                                            (mem) => {
+                                                return mem.userId === +value;
+                                            }
+                                        );
+
+                                        userSelect = {
+                                            ...userSelect,
+                                            id: userSelect.userId,
+                                        };
+                                        console.log("userSelect", userSelect);
+                                        dispatch(changeAssigneesAction(userSelect));
+                                        onChangeAntd(value, "listUserAsign");
+                                    }}
+                                    onSearch={onSearchSelectAssignees}
+                                    options={optionSelectAssignees}
+                                />
+                            </div>
                         </div>
 
                         {/* Priority */}
@@ -194,6 +375,7 @@ function ContentProjectDetailModal(props) {
                                     width: "100%",
                                 }}
                                 onChange={(value) => {
+                                    handleChangeTask("projectId", value);
                                     onChangeAntd(+value, "priorityId");
                                 }}
                                 options={optionSelectPriority}
@@ -205,7 +387,21 @@ function ContentProjectDetailModal(props) {
                             <label className="form-label">
                                 Original Estimate (HOURS)
                             </label>
-                            <Input type="number" value={values.originalEstimate} />
+
+                            <InputNumber
+                                type="number"
+                                name="timeTrackingSpent"
+                                value={task.originalEstimate}
+                                style={{
+                                    width: "100%",
+                                }}
+                                min={1}
+                                onChange={(value) => {
+                                    if (value === null) value = 0;
+                                    handleChangeTask("originalEstimate", value);
+                                }}
+                                placeholder="Number"
+                            />
                         </div>
 
                         {/* Time tracking */}
@@ -248,6 +444,43 @@ function ContentProjectDetailModal(props) {
                                             {values.timeTrackingRemaining}h estimated
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="row mt-3">
+                                <div className="col-6 d-flex flex-column justify-content-between">
+                                    <label className="form-label">Time spent</label>
+                                    <InputNumber
+                                        type="number"
+                                        name="timeTrackingSpent"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        min={1}
+                                        onChange={(value) => {
+                                            if (value === null) value = 0;
+                                            handleChangeTask("timeTrackingSpent", value);
+                                        }}
+                                        placeholder="Number"
+                                    />
+                                </div>
+                                <div className="col-6 d-flex flex-column justify-content-between">
+                                    <label className="form-label">Time remaining</label>
+                                    <InputNumber
+                                        type="number"
+                                        name="timeTrackingRemaining"
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                        min={1}
+                                        onChange={(value) => {
+                                            if (value === null) value = 0;
+                                            handleChangeTask(
+                                                "timeTrackingRemaining",
+                                                value
+                                            );
+                                        }}
+                                        placeholder="Number"
+                                    />
                                 </div>
                             </div>
                         </div>

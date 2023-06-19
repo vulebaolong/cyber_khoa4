@@ -19,7 +19,7 @@ function ContentProjectCreate(props) {
 
     useEffect(() => {
         dispatch(projectCategoryAction());
-    }, [dispatch]);
+    }, []);
 
     const handleEditorChange = () => {
         if (editorRef.current) {

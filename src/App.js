@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch } from "react-router-dom";
 import { UserLoginTemplate } from "./templates/UserLoginTemplate";
 import { HomeTemplate } from "./templates/HomeTemplate";
@@ -7,8 +7,6 @@ import { JiraTemplate } from "./templates/JiraTemplate";
 import Loading from "./components/Other/Loading";
 import LoginJira from "./pages/Jira/LoginJira";
 import NotFound from "./pages/NotFound/NotFound";
-import ProjectSetting from "./pages/Jira/ProjectCreate";
-import BoardJira from "./pages/Jira/BoardJira";
 import ProjectManager from "./pages/Jira/ProjectManager";
 import DrawerRight from "./HOC/DrawerRight";
 // import Fun from "./components/Jira/Fun/Fun";
@@ -23,8 +21,7 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(initNotificationAction(api));
-    }, [dispatch, api]);
-
+    }, []);
     return (
         <>
             {contextHolder}

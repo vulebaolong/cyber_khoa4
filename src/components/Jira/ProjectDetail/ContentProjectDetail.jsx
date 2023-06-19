@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import style from "./ContentProjectDetail.module.css";
 import { Avatar, Tooltip } from "antd";
-import { componentContenModal } from "../../../redux/actions/jiraAction";
 import ContentProjectDetailModal from "./ContentProjectDetailModal";
+import {
+    componentContenModalAction,
+    getOneTaskAction,
+} from "../../../redux/actions/jiraAction";
 
 function ContentProjectDetail(props) {
     const { projectDetail } = useSelector((state) => state.projectReducer);
     const dispatch = useDispatch();
     const { lstTask } = projectDetail;
-    console.log(lstTask);
     const renderAvatar = (users) => {
         return users.map((user) => {
             return (
@@ -18,6 +20,8 @@ function ContentProjectDetail(props) {
             );
         });
     };
+
+    // task trong 1 cột
     const renderListItemTask = (listItemTask) => {
         return listItemTask.map((item, index) => {
             const renderIconPriority = () => {
@@ -38,7 +42,10 @@ function ContentProjectDetail(props) {
                     data-bs-toggle="modal"
                     data-bs-target="#modalMain"
                     onClick={() => {
-                        dispatch(componentContenModal(<ContentProjectDetailModal />));
+                        dispatch(getOneTaskAction(item.taskId));
+                        // dispatch(
+                        //     componentContenModalAction(<ContentProjectDetailModal />)
+                        // );
                     }}
                 >
                     <div className="">
@@ -64,6 +71,8 @@ function ContentProjectDetail(props) {
             );
         });
     };
+
+    // 4 cột
     const renderListTask = () => {
         return lstTask.map((task) => {
             return (

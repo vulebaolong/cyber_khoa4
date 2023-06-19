@@ -21,7 +21,9 @@ export function* rootSaga() {
         projectSaga.theodoiDeleteUserProject(),
         projectSaga.theodoiGetOneProject(),
         taskSaga.theodoiGetAllTaskType(),
-        taskSaga.theodoicreateTask(),
+        taskSaga.theodoiCreateTask(),
+        taskSaga.theodoiGetOneTask(),
+        taskSaga.theodoiUpdateStatusTask(),
         prioritySaga.theodoiGetAllPriority(),
         statusSaga.theodoiGetAllStatus(),
     ]);
