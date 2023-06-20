@@ -60,5 +60,9 @@ a {
 /* SCROLLBAR - end */
 
 .modal-backdrop {
-    z-index: 1049;
+    z-index: 1000;
+}
+
+#modalMain {
+    z-index: 1001;
 }

@@ -4,26 +4,35 @@ import parse from "html-react-parser";
 import { withFormik } from "formik";
 import { useEffect } from "react";
 import {
+    changeAndUpdateApiTaskAction,
     changeAssigneesAction,
     changeTaskAction,
+    deleteUserAssignessAction,
     getAllStatusAction,
     getAllTaskTypeAction,
     getPriorityAction,
     updateStatusTaskAction,
 } from "../../../redux/actions/jiraAction";
-import { Avatar, Button, Input, InputNumber, Select, Space, Typography } from "antd";
+import {
+    Avatar,
+    Button,
+    Input,
+    InputNumber,
+    Popover,
+    Select,
+    Space,
+    Typography,
+} from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { useState } from "react";
+import { CHANGE_ASSIGNEES } from "../../../redux/contants/jiraContant";
 const { Text, Link } = Typography;
-
-const onSearchSelectAssignees = (value) => {
-    // console.log(`Search SelectAssignee ${value}`);
-};
 
 function ContentProjectDetailModal(props) {
     const [showEditor, setShowEditor] = useState(false);
+    const [showSelect, setShowSelect] = useState(false);
     const dispatch = useDispatch();
     const editorRef = useRef(null);
 
@@ -40,7 +49,6 @@ function ContentProjectDetailModal(props) {
     const { priority } = priorityReducer;
     const { taskType } = taskTypeReducer;
     const { projectDetail } = projectReducer;
-    console.log(task);
     const onChangeAntd = (value, name) => {
         console.log("value: ", value);
         console.log("name: ", name);
@@ -90,6 +98,9 @@ function ContentProjectDetailModal(props) {
                 <div
                     key={user.id}
                     className={`${style.reporter_item} d-flex align-items-center gap-1`}
+                    onClick={() => {
+                        dispatch(deleteUserAssignessAction(user));
+                    }}
                 >
                     <Avatar src={user.avatar} size={20} />
                     <Text>{user.name}</Text>
@@ -188,6 +199,41 @@ function ContentProjectDetailModal(props) {
     const handleChangeTask = (name, value) => {
         dispatch(changeTaskAction({ name, value }));
     };
+
+    const selectAssignees = (
+        <Select
+            optionFilterProp="label"
+            showSearch
+            autoClearSearchValue={true}
+            style={{
+                width: "100%",
+            }}
+            placeholder="Search assignees"
+            onChange={(value) => {
+                console.log(value);
+                let userSelect = projectDetail.members.find((mem) => {
+                    return mem.userId === +value;
+                });
+
+                userSelect = {
+                    ...userSelect,
+                    id: userSelect.userId,
+                    type: CHANGE_ASSIGNEES,
+                };
+                console.log("userSelect", userSelect);
+                dispatch(changeAndUpdateApiTaskAction(userSelect));
+            }}
+            onSelect={() => {
+                setShowSelect(false);
+            }}
+            onBlur={() => {
+                setShowSelect(false);
+            }}
+            open={true}
+            options={optionSelectAssignees}
+        />
+    );
+
     return (
         <>
             <div className="modal-header">
@@ -238,61 +284,80 @@ function ContentProjectDetailModal(props) {
                 <div className="row">
                     {/* Trái */}
                     <div className="col-8">
-                        <textarea
-                            className={`${style.title}`}
-                            placeholder="Short summary"
-                            style={{ height: 48 }}
-                            defaultValue={"This is an issue of type: Task."}
+                        {/* taskName */}
+                        <Input
+                            style={{
+                                padding: "4px 0",
+                                fontSize: "1.5rem",
+                                fontWeight: "500",
+                            }}
+                            placeholder="Borderless"
+                            bordered={false}
+                            value={task.taskName}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                dispatch(
+                                    changeAndUpdateApiTaskAction({
+                                        name: "taskName",
+                                        value,
+                                    })
+                                );
+                            }}
                         />
 
                         {/* Description */}
                         <div className="">
-                            <p>Description</p>
+                            <label className="form-label">
+                                <strong>Description</strong>
+                            </label>
                             {renderDescription()}
                         </div>
 
-                        <p>Comments</p>
-
-                        <div className="comment d-flex gap-3">
-                            <div className="">
-                                <img
-                                    className="rounded-circle"
-                                    src="https://picsum.photos/35"
-                                    alt=""
-                                />
-                            </div>
-                            <div style={{ width: "100%" }}>
-                                <div className={`${style.comment_write}`}>
-                                    Add a comment...
+                        {/* Comments */}
+                        <div className="">
+                            <label className="form-label">
+                                <strong>Comments</strong>
+                            </label>
+                            <div className="comment d-flex gap-3">
+                                <div className="">
+                                    <img
+                                        className="rounded-circle"
+                                        src="https://picsum.photos/35"
+                                        alt=""
+                                    />
                                 </div>
-                                <div className={`${style.comment_note}`}>
-                                    <strong>Pro tip:</strong>press
-                                    <span>M</span>to comment
+                                <div style={{ width: "100%" }}>
+                                    <div className={`${style.comment_write}`}>
+                                        Add a comment...
+                                    </div>
+                                    <div className={`${style.comment_note}`}>
+                                        <strong>Pro tip:</strong>press
+                                        <span>M</span>to comment
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="issue-comment d-flex gap-3 mt-4">
-                            <div className="">
-                                <img
-                                    className="rounded-circle"
-                                    src="https://picsum.photos/35"
-                                    alt=""
-                                />
-                            </div>
-                            <div className="">
-                                <div className="d-flex gap-2">
-                                    <div>Lord Gaben</div>
-                                    <div>20 hours ago</div>
+                            <div className="issue-comment d-flex gap-3 mt-4">
+                                <div className="">
+                                    <img
+                                        className="rounded-circle"
+                                        src="https://picsum.photos/35"
+                                        alt=""
+                                    />
                                 </div>
+                                <div className="">
+                                    <div className="d-flex gap-2">
+                                        <div>Lord Gaben</div>
+                                        <div>20 hours ago</div>
+                                    </div>
 
-                                <p className="">
-                                    An old silent pond... A frog jumps into the pond,
-                                    splash! Silence again.
-                                </p>
-                                <div className="d-flex gap-2">
-                                    <div className="">Edit</div>
-                                    <div className="">Delete</div>
+                                    <p className="">
+                                        An old silent pond... A frog jumps into the pond,
+                                        splash! Silence again.
+                                    </p>
+                                    <div className="d-flex gap-2">
+                                        <div className="">Edit</div>
+                                        <div className="">Delete</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -302,23 +367,22 @@ function ContentProjectDetailModal(props) {
                     <div className="col-4">
                         {/* Status */}
                         <div className="">
-                            <label className="form-label">Status</label>
+                            <label className="form-label">
+                                <strong>Status</strong>
+                            </label>
                             <Select
                                 name="statusId"
                                 value={`${values.statusId}`}
                                 style={{
                                     width: "100%",
                                 }}
-                                onChange={(value) => {
+                                onSelect={(value) => {
                                     dispatch(
-                                        updateStatusTaskAction({
-                                            taskId: task.taskId,
-                                            statusId: value,
-                                            projectId: task.projectId,
+                                        changeAndUpdateApiTaskAction({
+                                            name: "statusId",
+                                            value,
                                         })
                                     );
-                                    handleChangeTask("statusId", value);
-                                    onChangeAntd(+value, "statusId");
                                 }}
                                 options={optionSelectStatus}
                             />
@@ -326,48 +390,41 @@ function ContentProjectDetailModal(props) {
 
                         {/* Assignees */}
                         <div className="assigness mt-3">
-                            <label className="form-label">Assignees</label>
-                            <div className="d-flex align-items-center gap-3 flex-wrap">
+                            <label className="form-label">
+                                <strong>Assignees</strong>
+                            </label>
+                            <div
+                                className="d-flex align-items-center gap-2 flex-wrap"
+                                style={{ position: "relative" }}
+                            >
                                 {renderAssignees()}
-                            </div>
-
-                            <div className="" style={{ display: "inline-block" }}>
-                                <Button type="link" className="d-flex align-items-center">
+                                <Button
+                                    type="link"
+                                    className="d-flex align-items-center"
+                                    onClick={() => {
+                                        setShowSelect(!showSelect);
+                                    }}
+                                >
                                     <PlusOutlined /> Add more
                                 </Button>
-                                <Select
-                                    value={values.listUserAsign}
-                                    showSearch
-                                    optionFilterProp="label"
+                                <div
                                     style={{
+                                        position: "absolute",
                                         width: "100%",
+                                        bottom: -35,
+                                        left: 0,
                                     }}
-                                    placeholder="Please select assignees"
-                                    onChange={(value) => {
-                                        console.log(value);
-                                        let userSelect = projectDetail.members.find(
-                                            (mem) => {
-                                                return mem.userId === +value;
-                                            }
-                                        );
-
-                                        userSelect = {
-                                            ...userSelect,
-                                            id: userSelect.userId,
-                                        };
-                                        console.log("userSelect", userSelect);
-                                        dispatch(changeAssigneesAction(userSelect));
-                                        onChangeAntd(value, "listUserAsign");
-                                    }}
-                                    onSearch={onSearchSelectAssignees}
-                                    options={optionSelectAssignees}
-                                />
+                                >
+                                    {showSelect && selectAssignees}
+                                </div>
                             </div>
                         </div>
 
                         {/* Priority */}
                         <div className="priority mt-3">
-                            <label className="form-label">Priority</label>
+                            <label className="form-label">
+                                <strong>Priority</strong>
+                            </label>
                             <Select
                                 name="priorityId"
                                 value={`${values.priorityId}`}
@@ -375,9 +432,14 @@ function ContentProjectDetailModal(props) {
                                     width: "100%",
                                 }}
                                 onChange={(value) => {
-                                    handleChangeTask("projectId", value);
-                                    onChangeAntd(+value, "priorityId");
+                                    dispatch(
+                                        changeAndUpdateApiTaskAction({
+                                            name: "priorityId",
+                                            value,
+                                        })
+                                    );
                                 }}
+                                showSearch
                                 options={optionSelectPriority}
                             />
                         </div>
@@ -385,7 +447,7 @@ function ContentProjectDetailModal(props) {
                         {/* ORIGINAL ESTIMATE */}
                         <div className="original mt-3">
                             <label className="form-label">
-                                Original Estimate (HOURS)
+                                <strong>Original Estimate (HOURS)</strong>
                             </label>
 
                             <InputNumber
@@ -398,7 +460,12 @@ function ContentProjectDetailModal(props) {
                                 min={1}
                                 onChange={(value) => {
                                     if (value === null) value = 0;
-                                    handleChangeTask("originalEstimate", value);
+                                    dispatch(
+                                        changeAndUpdateApiTaskAction({
+                                            name: "originalEstimate",
+                                            value,
+                                        })
+                                    );
                                 }}
                                 placeholder="Number"
                             />
@@ -406,7 +473,9 @@ function ContentProjectDetailModal(props) {
 
                         {/* Time tracking */}
                         <div className="time mt-3">
-                            <label className="form-label">Time Tracking</label>
+                            <label className="form-label">
+                                <strong>Time Tracking</strong>
+                            </label>
                             <div
                                 style={{
                                     borderRadius: "0.2rem",
@@ -458,7 +527,12 @@ function ContentProjectDetailModal(props) {
                                         min={1}
                                         onChange={(value) => {
                                             if (value === null) value = 0;
-                                            handleChangeTask("timeTrackingSpent", value);
+                                            dispatch(
+                                                changeAndUpdateApiTaskAction({
+                                                    name: "timeTrackingSpent",
+                                                    value,
+                                                })
+                                            );
                                         }}
                                         placeholder="Number"
                                     />
@@ -474,9 +548,11 @@ function ContentProjectDetailModal(props) {
                                         min={1}
                                         onChange={(value) => {
                                             if (value === null) value = 0;
-                                            handleChangeTask(
-                                                "timeTrackingRemaining",
-                                                value
+                                            dispatch(
+                                                changeAndUpdateApiTaskAction({
+                                                    name: "timeTrackingRemaining",
+                                                    value,
+                                                })
                                             );
                                         }}
                                         placeholder="Number"

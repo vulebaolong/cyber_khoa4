@@ -9,7 +9,6 @@ function Modal() {
             tabIndex={-1}
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
-            style={{ zIndex: 1050 }}
         >
             <div className="modal-dialog modal-xl">
                 <div className="modal-content">{ComponentContentModal}</div>

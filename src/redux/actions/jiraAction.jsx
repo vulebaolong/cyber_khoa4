@@ -1,11 +1,13 @@
 import {
     ADD_USER_PROJECT_API_SAGA,
+    CHANGE_AND_UPDATEAPI_TASK,
     CHANGE_ASSIGNEES,
     CHANGE_TASK,
     COMPONENT_CONTENT_MODAL,
     CREATE_PROJECT_API_SAGA,
     CREATE_TASK_API_SAGA,
     DELETE_PROJECT_API_SAGE,
+    DELETE_USER_ASSIGNEES,
     DELETE_USER_PROJECT_API_SAGA,
     GET_ALL_PRIORITY_API_SAGA,
     GET_ALL_PROJECTS_API_SAGA,
@@ -186,9 +188,23 @@ export const changeAssigneesAction = (data) => {
     };
 };
 
+export const deleteUserAssignessAction = (data) => {
+    return {
+        type: DELETE_USER_ASSIGNEES,
+        payload: data,
+    };
+};
+
 export const updateTaskAction = (data) => {
     return {
         type: UPDATE_TASK_API_SAGA,
+        payload: data,
+    };
+};
+
+export const changeAndUpdateApiTaskAction = (data) => {
+    return {
+        type: CHANGE_AND_UPDATEAPI_TASK,
         payload: data,
     };
 };

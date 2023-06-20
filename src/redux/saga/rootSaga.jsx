@@ -24,6 +24,7 @@ export function* rootSaga() {
         taskSaga.theodoiCreateTask(),
         taskSaga.theodoiGetOneTask(),
         taskSaga.theodoiUpdateStatusTask(),
+        taskSaga.theodoiChangeAndUpdateApiTask(),
         prioritySaga.theodoiGetAllPriority(),
         statusSaga.theodoiGetAllStatus(),
     ]);

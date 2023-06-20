@@ -203,7 +203,7 @@ export function* theodoiDeleteUserProject() {
     yield takeLatest(DELETE_USER_PROJECT_API_SAGA, deleteUserProject);
 }
 
-//deleteUserProjectSaga
+//getOneProject
 function* getOneProject({ type, payload, isLoading = true }) {
     if (isLoading) loading.show();
     try {

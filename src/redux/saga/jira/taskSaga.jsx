@@ -1,7 +1,10 @@
 import { loading } from "../../../util/showHideLoading";
-import { call, delay, put, takeLatest } from "redux-saga/effects";
+import { call, delay, put, select, takeLatest } from "redux-saga/effects";
 import { STATE_CODE } from "../../../util/constant/statusCode";
 import {
+    CHANGE_AND_UPDATEAPI_TASK,
+    CHANGE_ASSIGNEES,
+    CHANGE_TASK,
     COMPONENT_CONTENT_MODAL,
     CREATE_TASK_API_SAGA,
     GET_ALL_TASKTPYE_API_SAGA,
@@ -49,10 +52,15 @@ function* createTask({ type, payload }) {
         console.log("Saga - createTask", { data, status });
 
         if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
-
+        yield put({
+            type: GET_ONE_PROJECT_API_SAGA,
+            payload: data.content.projectId,
+            isLoading: false,
+        });
         yield put({
             type: HIDE_DRAWER,
         });
+
         loading.hide();
 
         history.push(`/projectdetail/${payload.projectId}`);
@@ -145,4 +153,53 @@ function* updateTask({ type, payload }) {
 }
 export function* theodoiUpdateTask() {
     yield takeLatest(UPDATE_TASK_API_SAGA, updateTask);
+}
+
+// changeAndUpdateApiTask
+function* changeAndUpdateApiTask({ type, payload }) {
+    console.log(payload);
+    try {
+        // thay đổi dữ liệu saga
+        switch (payload.type) {
+            case CHANGE_ASSIGNEES:
+                yield put({
+                    type: CHANGE_ASSIGNEES,
+                    payload,
+                });
+                break;
+
+            default:
+                yield put({
+                    type: CHANGE_TASK,
+                    payload,
+                });
+                break;
+        }
+
+        //lấy state task
+        let { task } = yield select((state) => state.taskReducer);
+        const listUserAsign = task.assigness.map((user) => {
+            return user.id;
+        });
+        task = {
+            ...task,
+            listUserAsign,
+        };
+
+        //cập nhật api
+        const { data, status } = yield call(() => taskAPI.updateTask(task));
+        if (status !== STATE_CODE.SUCCESS) throw new Error(`status: ${status}`);
+        console.log("Saga - changeAndUpdateApiTask", { data, status });
+
+        yield put({
+            type: GET_ONE_PROJECT_API_SAGA,
+            payload: task.projectId,
+            isLoading: false,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+export function* theodoiChangeAndUpdateApiTask() {
+    yield takeLatest(CHANGE_AND_UPDATEAPI_TASK, changeAndUpdateApiTask);
 }
