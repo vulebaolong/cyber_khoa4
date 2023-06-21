@@ -5,10 +5,12 @@ import ContentProjectDetailModal from "./ContentProjectDetailModal";
 import {
     componentContenModalAction,
     getOneTaskAction,
+    updateStatusTaskAction,
 } from "../../../redux/actions/jiraAction";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { vlbl } from "vlbl";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 const { Paragraph, Text } = Typography;
 
 function ContentProjectDetail(props) {
@@ -26,6 +28,34 @@ function ContentProjectDetail(props) {
         }
     }, []);
 
+    //xử lý drag and drop
+    const handleDragEnd = (result) => {
+        console.log(result);
+        const { projectId, taskId } = JSON.parse(result.draggableId);
+        const { destination, source } = result;
+
+        if (!destination) return;
+        if (
+            source.index === destination.index &&
+            source.droppableId === destination.droppableId
+        )
+            return;
+
+        // console.log({
+        //     taskId,
+        //     statusId: destination.droppableId,
+        //     projectId,
+        // });
+
+        dispatch(
+            updateStatusTaskAction({
+                taskId,
+                statusId: destination.droppableId,
+                projectId,
+            })
+        );
+    };
+
     const renderAvatar = (users) => {
         return users.map((user) => {
             return (
@@ -35,39 +65,10 @@ function ContentProjectDetail(props) {
             );
         });
     };
-    const handleOnDragStart = (e, item) => {
-        // console.log(`OnDragStart - ${item.taskName}`, { e, item });
-        selectEl.current = item;
-    };
-    const handleOnDragEnter = (e, item, listItemTask) => {
-        toEl.current = { ...item };
-        const selectId = selectEl.current.taskId;
-        const seclectIndex = arr.findIndex((itemFind) => itemFind.taskId === selectId);
-
-        const toId = item.taskId;
-        const toIndex = arr.findIndex((itemFind) => itemFind.taskId === toId);
-        // console.log("thằng đang nắm: ", seclectIndex);
-        // console.log("thằng đang kéo tới: ", toIndex);
-        // console.log(`OnDragOver - ${item.taskName}`, item.taskId, { e, item });
-        // console.log(arr);
-
-        let copyArr = vlbl.copy(arr);
-        [copyArr[seclectIndex], copyArr[toIndex]] = [
-            copyArr[toIndex],
-            copyArr[seclectIndex],
-        ];
-        setArr(copyArr);
-    };
-    const handleOnDragEnd = (e, item, listItemTask) => {
-        console.log(123);
-        selectEl.current = {};
-        setArr([...arr]);
-    };
 
     // task trong 1 cột
     const renderListItemTask = (listItemTask) => {
-        console.log(arr);
-        return arr.map((item, index) => {
+        return listItemTask.map((item, index) => {
             const renderIconPriority = () => {
                 const { priority } = item.priorityTask;
                 let color = "white";
@@ -81,72 +82,93 @@ function ContentProjectDetail(props) {
             };
 
             return (
-                <li
-                    key={index}
-                    className={`list-group-item border border-secondary rounded-2`}
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalMain"
-                    onClick={() => {
-                        dispatch(getOneTaskAction(item.taskId));
-                    }}
-                    draggable="true"
-                    onDragStart={(e) => {
-                        handleOnDragStart(e, item, listItemTask);
-                    }}
-                    onDragEnter={(e) => {
-                        handleOnDragEnter(e, item, listItemTask);
-                    }}
-                    onDragEnd={(e) => {
-                        handleOnDragEnd(e, item, listItemTask);
-                    }}
+                <Draggable
+                    key={`${item.taskId}`}
+                    index={index}
+                    draggableId={JSON.stringify({
+                        projectId: item.projectId,
+                        taskId: item.taskId,
+                    })}
                 >
-                    <div className="">
-                        <Text
-                            style={{
-                                width: "100% ",
-                                marginBottom: "1rem",
-                            }}
-                            ellipsis={{ tooltip: item.taskName }}
-                        >
-                            {item.taskName}
-                        </Text>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex align-items-center gap-2">
-                                <i className="fa-solid fa-square-check"></i>
-                                {renderIconPriority()}
-                            </div>
-                            <Avatar.Group
-                                maxCount={2}
-                                maxStyle={{
-                                    color: "#f56a00",
-                                    backgroundColor: "#fde3cf",
+                    {(provided) => {
+                        return (
+                            <li
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`list-group-item border border-secondary rounded-2`}
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalMain"
+                                onClick={() => {
+                                    dispatch(getOneTaskAction(item.taskId));
                                 }}
-                                style={{ cursor: "pointer" }}
-                                size="small"
+                                draggable="true"
                             >
-                                {renderAvatar(item.assigness)}
-                            </Avatar.Group>
-                        </div>
-                    </div>
-                </li>
+                                <div className="">
+                                    <Text
+                                        style={{
+                                            width: "100% ",
+                                            marginBottom: "1rem",
+                                        }}
+                                        ellipsis={{ tooltip: item.taskName }}
+                                    >
+                                        {item.taskName}
+                                    </Text>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="d-flex align-items-center gap-2">
+                                            <i className="fa-solid fa-square-check"></i>
+                                            {renderIconPriority()}
+                                        </div>
+                                        <Avatar.Group
+                                            maxCount={2}
+                                            maxStyle={{
+                                                color: "#f56a00",
+                                                backgroundColor: "#fde3cf",
+                                            }}
+                                            style={{ cursor: "pointer" }}
+                                            size="small"
+                                        >
+                                            {renderAvatar(item.assigness)}
+                                        </Avatar.Group>
+                                    </div>
+                                </div>
+                            </li>
+                        );
+                    }}
+                </Draggable>
             );
         });
     };
 
     // 4 cột
     const renderListTask = () => {
-        return lstTask.map((task) => {
-            return (
-                <div key={task.statusId} className="col-3">
-                    <div className={`${style.card} card `}>
-                        <div className="mb-4">{task.statusName}</div>
-                        <ul className="list-group list-group-flush gap-2 border border-0">
-                            {renderListItemTask(task.lstTaskDeTail)}
-                        </ul>
-                    </div>
-                </div>
-            );
-        });
+        return (
+            <DragDropContext onDragEnd={handleDragEnd}>
+                {lstTask.map((task) => {
+                    return (
+                        <Droppable droppableId={task.statusId} key={task.statusId}>
+                            {(provided) => {
+                                return (
+                                    <div className="col-3">
+                                        <div
+                                            className={`${style.card} card `}
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                        >
+                                            <div className="mb-4">{task.statusName}</div>
+                                            <ul className="list-group list-group-flush gap-2 border border-0">
+                                                {renderListItemTask(task.lstTaskDeTail)}
+                                                {provided.placeholder}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                );
+                            }}
+                        </Droppable>
+                    );
+                })}
+            </DragDropContext>
+        );
     };
     return (
         <div className="">
